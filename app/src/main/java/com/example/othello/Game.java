@@ -1,8 +1,11 @@
 package com.example.othello;
 
 
+import static com.example.othello.MainActivity.MAIN_ACTIVITY;
+
 import android.util.ArrayMap;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -65,6 +68,13 @@ public class Game {
             board.setHintCanPut(availableCells);
 
             if (boardCheckService.isPass(currentTurn)) {
+                // トースト設定
+                Toast passToast = Toast.makeText(
+                        MAIN_ACTIVITY,
+                        currentTurn + "パス",
+                        Toast.LENGTH_SHORT
+                );
+
                 toggleTurn();
                 board.resetTextViewHint();
                 boardCheckService.check(board, currentTurn);
@@ -79,6 +89,8 @@ public class Game {
                     } else {
                         turnText.setText("引き分けです");
                     }
+                } else {
+                    passToast.show();
                 }
             }
         } else {

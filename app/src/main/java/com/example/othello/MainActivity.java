@@ -1,7 +1,10 @@
 package com.example.othello;
 
 
+import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.os.Bundle;
 
@@ -17,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         MAIN_ACTIVITY = this;
+
+        // ダークモードを無効化
+        AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO);
 
         TextView turnText = findViewById(R.id.turnText);
         TableLayout tableLayout = findViewById(R.id.board);
