@@ -1,27 +1,38 @@
 package com.example.othello;
 
 
+import android.util.ArrayMap;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class Game {
     public TextView turnText;
 
     public TextView stoneCountText;
-    public String currentTurn;
+    public Player currentTurn;
 
     public int blackStoneCount;
     public int whiteStoneCount;
 
-    protected Board board;
+    private Board board;
 
-    public Game(TextView turnText, TextView stoneCountText) {
+    private BoardCheckService boardCheckService;
+
+    public Game(TextView turnText, TextView stoneCountText, Board board, BoardCheckService boardCheckService) {
         this.turnText = turnText;
         this.stoneCountText = stoneCountText;
+        this.board = board;
+        this.boardCheckService = boardCheckService;
     }
 
     public void startGame() {
         setFirstTurn();
         setTurnText();
+        updateStoneCount();
+
+        boardCheckService.check(board, currentTurn);
+        board.setHintCanPut(boardCheckService.getAvailableCells(currentTurn));
     }
 
     public void resetGame() {
@@ -29,30 +40,62 @@ public class Game {
         setFirstTurn();
         setTurnText();
         updateStoneCount();
+        boardCheckService.check(board, currentTurn);
+        board.setHintCanPut(boardCheckService.getAvailableCells(currentTurn));
     }
 
     public void setFirstTurn() {
-        currentTurn = Constants.PLAYER_BLACK;
+        currentTurn = Player.BLACK;
     }
 
-    public String toggleTurn() {
-        if (currentTurn == Constants.PLAYER_BLACK) {
-            currentTurn = Constants.PLAYER_WHITE;
-        } else if (currentTurn == Constants.PLAYER_WHITE) {
-            currentTurn = Constants.PLAYER_BLACK;
+    public void putStone(Cell cell) {
+        boolean isAvailableCell = boardCheckService.isAvailableCell(cell, currentTurn);
+
+        if (cell.isEmpty() && isAvailableCell) {
+            ArrayList<Cell> reversibleCells = boardCheckService.getReversibleCells(cell, currentTurn);
+            board.putStone(cell, currentTurn);
+            board.reverseStone(reversibleCells, currentTurn);
+
+            updateStoneCount();
+
+            toggleTurn();
+            board.resetTextViewHint();
+            boardCheckService.check(board, currentTurn);
+            ArrayMap<Integer, CanPutCell> availableCells = boardCheckService.getAvailableCells(currentTurn);
+            board.setHintCanPut(availableCells);
+        } else {
+            // TODO ちゃんと動いてないので直す
+            if (boardCheckService.isGameEnd()) {
+                if (blackStoneCount > whiteStoneCount) {
+                    turnText.setText("黒の勝ちです");
+                } else if (blackStoneCount < whiteStoneCount) {
+                    turnText.setText("白の勝ちです");
+                } else {
+                    turnText.setText("引き分けです");
+                }
+            } else if (boardCheckService.isPass(currentTurn)) {
+                toggleTurn();
+                board.resetTextViewHint();
+                boardCheckService.check(board, currentTurn);
+                ArrayMap<Integer, CanPutCell> availableCells = boardCheckService.getAvailableCells(currentTurn);
+                board.setHintCanPut(availableCells);
+            }
+        }
+    }
+
+    private void toggleTurn() {
+        if (currentTurn == Player.BLACK) {
+            currentTurn = Player.WHITE;
+        } else if (currentTurn == Player.WHITE) {
+            currentTurn = Player.BLACK;
         }
         setTurnText();
-        return currentTurn;
     }
 
     public void updateStoneCount() {
-        blackStoneCount = board.getStoneCount(Constants.PLAYER_BLACK);
-        whiteStoneCount = board.getStoneCount(Constants.PLAYER_WHITE);
+        blackStoneCount = board.getStoneCount(Player.BLACK);
+        whiteStoneCount = board.getStoneCount(Player.WHITE);
         stoneCountText.setText("白：" + whiteStoneCount + "　　" + "黒：" + blackStoneCount);
-    }
-
-    public void setBoard(Board board) {
-        this.board = board;
     }
 
     public void setTurnText() {
