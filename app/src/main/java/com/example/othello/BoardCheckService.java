@@ -14,9 +14,11 @@ class BoardCheckService {
 
 
     public void check(Board board, Player currentTurn) {
-        blackAvailableCells = new ArrayMap<>();
-        whiteAvailableCells = new ArrayMap<>();
+        clearAvairableCells(currentTurn);
         for (Cell cell : board.getBoardMapValues()) {
+            if (!cell.isEmpty()) {
+                continue;
+            }
 
             // 裏返せる石を格納する配列
             ArrayMap<Direction, ArrayList<Cell>> reversibleCells = new ArrayMap<>();
@@ -36,6 +38,14 @@ class BoardCheckService {
                 // 探索結果を格納
                 setAvailableCells(cell, canPutCell, currentTurn);
             }
+        }
+    }
+
+    private void clearAvairableCells(Player player) {
+        if (player.equals(Player.BLACK)) {
+            blackAvailableCells = new ArrayMap<>();
+        } else {
+            whiteAvailableCells = new ArrayMap<>();
         }
     }
 

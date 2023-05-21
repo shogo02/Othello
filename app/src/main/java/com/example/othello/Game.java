@@ -63,23 +63,26 @@ public class Game {
             boardCheckService.check(board, currentTurn);
             ArrayMap<Integer, CanPutCell> availableCells = boardCheckService.getAvailableCells(currentTurn);
             board.setHintCanPut(availableCells);
-        } else {
-            // TODO ちゃんと動いてないので直す
-            if (boardCheckService.isGameEnd()) {
-                if (blackStoneCount > whiteStoneCount) {
-                    turnText.setText("黒の勝ちです");
-                } else if (blackStoneCount < whiteStoneCount) {
-                    turnText.setText("白の勝ちです");
-                } else {
-                    turnText.setText("引き分けです");
-                }
-            } else if (boardCheckService.isPass(currentTurn)) {
+
+            if (boardCheckService.isPass(currentTurn)) {
                 toggleTurn();
                 board.resetTextViewHint();
                 boardCheckService.check(board, currentTurn);
-                ArrayMap<Integer, CanPutCell> availableCells = boardCheckService.getAvailableCells(currentTurn);
+                availableCells = boardCheckService.getAvailableCells(currentTurn);
                 board.setHintCanPut(availableCells);
+
+                if (boardCheckService.isGameEnd()) {
+                    if (blackStoneCount > whiteStoneCount) {
+                        turnText.setText("黒の勝ちです");
+                    } else if (blackStoneCount < whiteStoneCount) {
+                        turnText.setText("白の勝ちです");
+                    } else {
+                        turnText.setText("引き分けです");
+                    }
+                }
             }
+        } else {
+
         }
     }
 
