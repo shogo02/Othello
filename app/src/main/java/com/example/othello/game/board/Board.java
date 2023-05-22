@@ -9,7 +9,7 @@ import android.widget.TableRow;
 
 import com.example.othello.constants.Constants;
 import com.example.othello.constants.Direction;
-import com.example.othello.constants.Player;
+import com.example.othello.constants.Turn;
 import com.example.othello.game.Game;
 
 import java.util.ArrayList;
@@ -65,17 +65,17 @@ public class Board {
         }
     }
 
-    public void putStone(Cell cell, Player player) {
-        if (player == Player.BLACK) {
+    public void putStone(Cell cell, Turn turn) {
+        if (turn == Turn.BLACK) {
             cell.setBlack();
-        } else if (player == Player.WHITE) {
+        } else if (turn == Turn.WHITE) {
             cell.setWhite();
         }
     }
 
-    public void reverseStone(ArrayList<Cell> cells, Player player) {
+    public void reverseStone(ArrayList<Cell> cells, Turn turn) {
         for (Cell cell : cells) {
-            putStone(cell, player);
+            putStone(cell, turn);
         }
     }
 
@@ -104,15 +104,15 @@ public class Board {
         return boardMap.values();
     }
 
-    public int getStoneCount(Player player) {
+    public int getStoneCount(Turn turn) {
         int blackCount = 0;
         int whiteCount = 0;
         for (Cell cell : boardMap.values()) {
             if (cell.isStateBlack()) blackCount++;
             if (cell.isStateWhite()) whiteCount++;
         }
-        if (player == Player.BLACK) return blackCount;
-        if (player == Player.WHITE) return whiteCount;
+        if (turn == Turn.BLACK) return blackCount;
+        if (turn == Turn.WHITE) return whiteCount;
         throw new Error("not found player");
     }
 

@@ -1,18 +1,18 @@
 package com.example.othello.game.board;
 import com.example.othello.constants.Constants;
 import com.example.othello.constants.Direction;
-import com.example.othello.constants.Player;
+import com.example.othello.constants.Turn;
 
 import java.util.ArrayList;
 
 public class DirectionCheck {
     private final Direction direction;
     private final Cell currentCell;
-    private final Player currentTurn;
+    private final Turn currentTurn;
 
     private ArrayList<Cell> reversibleCells = new ArrayList<>();
 
-    public DirectionCheck(Cell currentCell, Direction direction, Player currentTurn) {
+    public DirectionCheck(Cell currentCell, Direction direction, Turn currentTurn) {
         this.currentCell = currentCell;
         this.direction = direction;
         this.currentTurn = currentTurn;

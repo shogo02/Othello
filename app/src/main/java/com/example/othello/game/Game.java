@@ -7,7 +7,7 @@ import android.util.ArrayMap;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.othello.constants.Player;
+import com.example.othello.constants.Turn;
 import com.example.othello.game.board.Board;
 import com.example.othello.game.board.BoardCheckService;
 import com.example.othello.game.board.CanPutCell;
@@ -19,7 +19,7 @@ public class Game {
     public TextView turnText;
 
     public TextView stoneCountText;
-    public Player currentTurn;
+    public Turn currentTurn;
 
     public int blackStoneCount;
     public int whiteStoneCount;
@@ -54,7 +54,7 @@ public class Game {
     }
 
     public void setFirstTurn() {
-        currentTurn = Player.BLACK;
+        currentTurn = Turn.BLACK;
     }
 
     public void putStone(Cell cell) {
@@ -105,17 +105,17 @@ public class Game {
     }
 
     private void toggleTurn() {
-        if (currentTurn == Player.BLACK) {
-            currentTurn = Player.WHITE;
-        } else if (currentTurn == Player.WHITE) {
-            currentTurn = Player.BLACK;
+        if (currentTurn == Turn.BLACK) {
+            currentTurn = Turn.WHITE;
+        } else if (currentTurn == Turn.WHITE) {
+            currentTurn = Turn.BLACK;
         }
         setTurnText();
     }
 
     public void updateStoneCount() {
-        blackStoneCount = board.getStoneCount(Player.BLACK);
-        whiteStoneCount = board.getStoneCount(Player.WHITE);
+        blackStoneCount = board.getStoneCount(Turn.BLACK);
+        whiteStoneCount = board.getStoneCount(Turn.WHITE);
         stoneCountText.setText("白：" + whiteStoneCount + "　　" + "黒：" + blackStoneCount);
     }
 

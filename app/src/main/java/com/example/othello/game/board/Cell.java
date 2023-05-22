@@ -8,19 +8,19 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.example.othello.constants.Constants;
-import com.example.othello.constants.Player;
+import com.example.othello.constants.Turn;
 import com.example.othello.game.Game;
 
 public class Cell {
     private Integer cellId;
-    private Player state;
+    private Turn state;
     private TextView textView;
 
     public Cell() {
 
     }
 
-    public Cell(Integer cellId, Player state) {
+    public Cell(Integer cellId, Turn state) {
         this.cellId = cellId;
         this.state = state;
     }
@@ -57,11 +57,11 @@ public class Cell {
     }
 
     public boolean isStateBlack() {
-        return state == Player.BLACK;
+        return state == Turn.BLACK;
     }
 
     public boolean isStateWhite() {
-        return state == Player.WHITE;
+        return state == Turn.WHITE;
     }
 
     public boolean isEmpty() {
@@ -69,19 +69,19 @@ public class Cell {
     }
 
 
-    public boolean isSameState(Player state) {
+    public boolean isSameState(Turn state) {
         return this.state == state;
     }
 
-    public Player getEnemyState() {
-        return isStateBlack() ? Player.WHITE : Player.BLACK;
+    public Turn getEnemyState() {
+        return isStateBlack() ? Turn.WHITE : Turn.BLACK;
     }
 
     public Integer getId() {
         return cellId;
     }
 
-    public Player getState() {
+    public Turn getState() {
         return state;
     }
 
@@ -90,12 +90,12 @@ public class Cell {
     }
 
     public void setBlack() {
-        state = Player.BLACK;
+        state = Turn.BLACK;
         textView.setText("●");
     }
 
     public void setWhite() {
-        state = Player.WHITE;
+        state = Turn.WHITE;
         textView.setText("○");
     }
 

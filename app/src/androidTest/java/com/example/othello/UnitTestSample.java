@@ -12,7 +12,7 @@ import com.example.othello.game.board.Board;
 import com.example.othello.game.board.BoardCheckService;
 import com.example.othello.game.board.Cell;
 import com.example.othello.game.Game;
-import com.example.othello.constants.Player;
+import com.example.othello.constants.Turn;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,7 +27,7 @@ public class UnitTestSample {
     Board board;
     BoardCheckService boardCheckService;
 
-    Player player = Player.BLACK;
+    Turn turn = Turn.BLACK;
 
     Context mockContext;
 
@@ -44,35 +44,35 @@ public class UnitTestSample {
     @Test
     public void testCheckDirection() {
         // 42に黒の石を置くとし、全方向に白の石を置く
-        board.putStone(board.getCell(33), Player.WHITE);
-        board.putStone(board.getCell(34), Player.WHITE);
-        board.putStone(board.getCell(35), Player.WHITE);
-        board.putStone(board.getCell(41), Player.WHITE);
-        board.putStone(board.getCell(43), Player.WHITE);
-        board.putStone(board.getCell(49), Player.WHITE);
-        board.putStone(board.getCell(50), Player.WHITE);
-        board.putStone(board.getCell(51), Player.WHITE);
+        board.putStone(board.getCell(33), Turn.WHITE);
+        board.putStone(board.getCell(34), Turn.WHITE);
+        board.putStone(board.getCell(35), Turn.WHITE);
+        board.putStone(board.getCell(41), Turn.WHITE);
+        board.putStone(board.getCell(43), Turn.WHITE);
+        board.putStone(board.getCell(49), Turn.WHITE);
+        board.putStone(board.getCell(50), Turn.WHITE);
+        board.putStone(board.getCell(51), Turn.WHITE);
 
         // 更にその周囲を黒の石で囲む
-        board.putStone(board.getCell(24), Player.BLACK);
-        board.putStone(board.getCell(25), Player.BLACK);
-        board.putStone(board.getCell(26), Player.BLACK);
-        board.putStone(board.getCell(27), Player.BLACK);
-        board.putStone(board.getCell(28), Player.BLACK);
-        board.putStone(board.getCell(32), Player.BLACK);
-        board.putStone(board.getCell(36), Player.BLACK);
-        board.putStone(board.getCell(40), Player.BLACK);
-        board.putStone(board.getCell(44), Player.BLACK);
-        board.putStone(board.getCell(48), Player.BLACK);
-        board.putStone(board.getCell(52), Player.BLACK);
-        board.putStone(board.getCell(56), Player.BLACK);
-        board.putStone(board.getCell(57), Player.BLACK);
-        board.putStone(board.getCell(58), Player.BLACK);
-        board.putStone(board.getCell(59), Player.BLACK);
-        board.putStone(board.getCell(60), Player.BLACK);
+        board.putStone(board.getCell(24), Turn.BLACK);
+        board.putStone(board.getCell(25), Turn.BLACK);
+        board.putStone(board.getCell(26), Turn.BLACK);
+        board.putStone(board.getCell(27), Turn.BLACK);
+        board.putStone(board.getCell(28), Turn.BLACK);
+        board.putStone(board.getCell(32), Turn.BLACK);
+        board.putStone(board.getCell(36), Turn.BLACK);
+        board.putStone(board.getCell(40), Turn.BLACK);
+        board.putStone(board.getCell(44), Turn.BLACK);
+        board.putStone(board.getCell(48), Turn.BLACK);
+        board.putStone(board.getCell(52), Turn.BLACK);
+        board.putStone(board.getCell(56), Turn.BLACK);
+        board.putStone(board.getCell(57), Turn.BLACK);
+        board.putStone(board.getCell(58), Turn.BLACK);
+        board.putStone(board.getCell(59), Turn.BLACK);
+        board.putStone(board.getCell(60), Turn.BLACK);
 
-        boardCheckService.check(board, player);
-        ArrayList<Cell> reversibleCells =  boardCheckService.getReversibleCells(board.getCell(42), player);
+        boardCheckService.check(board, turn);
+        ArrayList<Cell> reversibleCells =  boardCheckService.getReversibleCells(board.getCell(42), turn);
         Assert.assertEquals(reversibleCells.size(), 8);
         for(Cell cell : reversibleCells) {
             if (

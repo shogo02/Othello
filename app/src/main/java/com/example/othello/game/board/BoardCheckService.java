@@ -3,7 +3,7 @@ package com.example.othello.game.board;
 import android.util.ArrayMap;
 
 import com.example.othello.constants.Direction;
-import com.example.othello.constants.Player;
+import com.example.othello.constants.Turn;
 
 import java.util.ArrayList;
 
@@ -16,7 +16,7 @@ public class BoardCheckService {
     private ArrayMap<Integer, CanPutCell> whiteAvailableCells = new ArrayMap<>();
 
 
-    public void check(Board board, Player currentTurn) {
+    public void check(Board board, Turn currentTurn) {
         clearAvairableCells(currentTurn);
         for (Cell cell : board.getBoardMapValues()) {
             if (!cell.isEmpty()) {
@@ -44,39 +44,39 @@ public class BoardCheckService {
         }
     }
 
-    private void clearAvairableCells(Player player) {
-        if (player.equals(Player.BLACK)) {
+    private void clearAvairableCells(Turn turn) {
+        if (turn.equals(Turn.BLACK)) {
             blackAvailableCells = new ArrayMap<>();
         } else {
             whiteAvailableCells = new ArrayMap<>();
         }
     }
 
-    private void setAvailableCells(Cell cell, CanPutCell canPutCells, Player currentTurn) {
-        if (currentTurn.equals(Player.BLACK)) {
+    private void setAvailableCells(Cell cell, CanPutCell canPutCells, Turn currentTurn) {
+        if (currentTurn.equals(Turn.BLACK)) {
             blackAvailableCells.put(cell.getId(), canPutCells);
         } else {
             whiteAvailableCells.put(cell.getId(), canPutCells);
         }
     }
 
-    public ArrayList<Cell> getReversibleCells(Cell cell, Player currentTurn) {
-        if (currentTurn.equals(Player.BLACK)) {
+    public ArrayList<Cell> getReversibleCells(Cell cell, Turn currentTurn) {
+        if (currentTurn.equals(Turn.BLACK)) {
             return blackAvailableCells.get(cell.getId()).getReversibleCells();
         } else {
             return whiteAvailableCells.get(cell.getId()).getReversibleCells();
         }
     }
 
-    public ArrayMap<Integer, CanPutCell> getAvailableCells(Player currentTurn) {
-        if (currentTurn.equals(Player.BLACK)) {
+    public ArrayMap<Integer, CanPutCell> getAvailableCells(Turn currentTurn) {
+        if (currentTurn.equals(Turn.BLACK)) {
             return blackAvailableCells;
         } else {
             return whiteAvailableCells;
         }
     }
 
-    public boolean isAvailableCell(Cell cell, Player currentTurn) {
+    public boolean isAvailableCell(Cell cell, Turn currentTurn) {
         ArrayMap<Integer, CanPutCell> availableCells = getAvailableCells(currentTurn);
         for (CanPutCell availableCell : availableCells.values()) {
             if (availableCell.cell.getId() == cell.getId()) {
@@ -86,8 +86,8 @@ public class BoardCheckService {
         return false;
     }
 
-    public boolean isPass(Player player) {
-        if (player.equals(Player.BLACK)) {
+    public boolean isPass(Turn turn) {
+        if (turn.equals(Turn.BLACK)) {
             return blackAvailableCells.size() == 0;
         } else {
             return whiteAvailableCells.size() == 0;
