@@ -1,11 +1,14 @@
-package com.example.othello;
+package com.example.othello.game.board;
 
 import android.util.ArrayMap;
+
+import com.example.othello.constants.Direction;
+import com.example.othello.constants.Player;
 
 import java.util.ArrayList;
 
 // 置けるセルと裏返るセルを格納するクラス
-class BoardCheckService {
+public class BoardCheckService {
     // プレイヤー黒が置けるセルを配列で格納
     private ArrayMap<Integer, CanPutCell> blackAvailableCells = new ArrayMap<>();
 

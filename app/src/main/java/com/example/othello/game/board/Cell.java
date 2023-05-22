@@ -1,4 +1,4 @@
-package com.example.othello;
+package com.example.othello.game.board;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -6,6 +6,10 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.example.othello.constants.Constants;
+import com.example.othello.constants.Player;
+import com.example.othello.game.Game;
 
 public class Cell {
     private Integer cellId;

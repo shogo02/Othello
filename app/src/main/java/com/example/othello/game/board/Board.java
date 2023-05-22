@@ -1,9 +1,16 @@
-package com.example.othello;
+package com.example.othello.game.board;
+
+import static com.example.othello.constants.Constants.*;
 
 import android.content.Context;
 import android.util.ArrayMap;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+
+import com.example.othello.constants.Constants;
+import com.example.othello.constants.Direction;
+import com.example.othello.constants.Player;
+import com.example.othello.game.Game;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,17 +23,17 @@ public class Board {
 
     }
 
-    void boardInit(Game game, TableLayout tableLayout, Context context) {
+    public void boardInit(Game game, TableLayout tableLayout, Context context) {
         // paddingを設定
         tableLayout.setPadding(Constants.BOARD_LINE, Constants.BOARD_LINE, Constants.BOARD_LINE, Constants.BOARD_LINE);
         tableLayout.setBackgroundColor(Constants.BOARD_LINE_COLOR);
 
         int cellId = 0;
         // TableRowとTextViewを作成してTableLayoutに追加する
-        for (int i = 0; i < Constants.BOARD_SIZE; i++) {
+        for (int i = 0; i < BOARD_SIZE; i++) {
             TableRow tableRow = new TableRow(context);
             tableRow.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT, 1.0f));
-            for (int j = 0; j < Constants.BOARD_SIZE; j++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
                 TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
                 layoutParams.setMargins(Constants.BOARD_LINE, Constants.BOARD_LINE, Constants.BOARD_LINE, Constants.BOARD_LINE);
 
@@ -46,11 +53,15 @@ public class Board {
     }
 
     public void setFirstStone(Cell cell) {
-        // TODO 8*8にしか対応してない
-        if (cell.getId() == 27 || cell.getId() == 36) {
-            cell.setBlack();
-        } else if (cell.getId() == 28 || cell.getId() == 35) {
+        int topRight = (BOARD_SIZE / 2) * (BOARD_SIZE - 1);
+        int topLeft = topRight + Direction.LEFT.getNumber();
+        int bottomRight = (BOARD_SIZE / 2) * (BOARD_SIZE + 1);
+        int bottomLeft = bottomRight + Direction.LEFT.getNumber();
+
+        if (cell.getId() == topLeft || cell.getId() == bottomRight) {
             cell.setWhite();
+        } else if (cell.getId() == topRight || cell.getId() == bottomLeft) {
+            cell.setBlack();
         }
     }
 

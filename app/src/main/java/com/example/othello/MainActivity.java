@@ -12,6 +12,10 @@ import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import com.example.othello.game.board.Board;
+import com.example.othello.game.board.BoardCheckService;
+import com.example.othello.game.Game;
+
 public class MainActivity extends AppCompatActivity {
     public static MainActivity MAIN_ACTIVITY;
 

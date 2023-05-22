@@ -1,10 +1,12 @@
-package com.example.othello;
+package com.example.othello.game.board;
 
 import android.util.ArrayMap;
 
+import com.example.othello.constants.Direction;
+
 import java.util.ArrayList;
 
-class CanPutCell {
+public class CanPutCell {
     public Cell cell; // 置けるセルを格納
     public ArrayMap<Direction, ArrayList<Cell>> reversibleCells; // 裏返るセルを格納
 

@@ -7,11 +7,15 @@ import android.widget.TextView;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
+
+import com.example.othello.game.board.Board;
+import com.example.othello.game.board.BoardCheckService;
+import com.example.othello.game.board.Cell;
+import com.example.othello.game.Game;
+import com.example.othello.constants.Player;
+
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

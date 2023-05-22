@@ -1,4 +1,8 @@
-package com.example.othello;
+package com.example.othello.game.board;
+import com.example.othello.constants.Constants;
+import com.example.othello.constants.Direction;
+import com.example.othello.constants.Player;
+
 import java.util.ArrayList;
 
 public class DirectionCheck {

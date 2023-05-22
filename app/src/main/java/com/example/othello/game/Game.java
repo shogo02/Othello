@@ -1,4 +1,4 @@
-package com.example.othello;
+package com.example.othello.game;
 
 
 import static com.example.othello.MainActivity.MAIN_ACTIVITY;
@@ -6,6 +6,12 @@ import static com.example.othello.MainActivity.MAIN_ACTIVITY;
 import android.util.ArrayMap;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.othello.constants.Player;
+import com.example.othello.game.board.Board;
+import com.example.othello.game.board.BoardCheckService;
+import com.example.othello.game.board.CanPutCell;
+import com.example.othello.game.board.Cell;
 
 import java.util.ArrayList;
 
