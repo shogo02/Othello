@@ -2,46 +2,143 @@ package com.example.othello.game;
 
 
 import static com.example.othello.MainActivity.MAIN_ACTIVITY;
+import static com.example.othello.MainActivity.uiHandler;
 
 import android.util.ArrayMap;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.othello.constants.Turn;
+import com.example.othello.constants.EnumPlayer;
+import com.example.othello.constants.StoneColor;
 import com.example.othello.game.board.Board;
 import com.example.othello.game.board.BoardCheckService;
 import com.example.othello.game.board.CanPutCell;
 import com.example.othello.game.board.Cell;
+import com.example.othello.player.Player;
+import com.example.othello.player.RandomPlayer;
+import com.example.othello.player.UserPlayer;
 
 import java.util.ArrayList;
 
 public class Game {
+    /* DI */
+    private Board board;
+
+    /* View */
     public TextView turnText;
 
     public TextView stoneCountText;
-    public Turn currentTurn;
+
+    /* Game */
+    public StoneColor currentStoneColor;
 
     public int blackStoneCount;
+
     public int whiteStoneCount;
 
-    private Board board;
+    public Player currentPlayer;
 
-    private BoardCheckService boardCheckService;
+    public Player playerBlack;
 
-    public Game(TextView turnText, TextView stoneCountText, Board board, BoardCheckService boardCheckService) {
+    public Player playerWhite;
+
+
+    public Game(TextView turnText, TextView stoneCountText, Board board) {
         this.turnText = turnText;
         this.stoneCountText = stoneCountText;
         this.board = board;
-        this.boardCheckService = boardCheckService;
     }
 
     public void startGame() {
+        initPlayer();
         setFirstTurn();
         setTurnText();
         updateStoneCount();
+        board.boardCheckService.check(board, currentStoneColor);
+        board.setHintCanPut(board.boardCheckService.getAvailableCells(currentStoneColor));
+        gameThreadStart();
+    }
 
-        boardCheckService.check(board, currentTurn);
-        board.setHintCanPut(boardCheckService.getAvailableCells(currentTurn));
+    public void gameThreadStart() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                PlayerHandler playerHandler = new PlayerHandler(board);
+
+                while (true) {
+                    if (!board.boardCheckService.isPass(currentStoneColor)) {
+                        playerHandler.handler(currentPlayer);
+                    } else { // パス処理
+                        board.boardCheckService.bothPlayerCheck(board);
+
+                        if (board.boardCheckService.isGameEnd()) {
+                            if (blackStoneCount > whiteStoneCount) {
+                                turnText.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        turnText.setText("黒の勝ちです");
+                                    }
+                                });
+                            } else if (blackStoneCount < whiteStoneCount) {
+                                turnText.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        turnText.setText("白の勝ちです");
+                                    }
+                                });
+                            } else {
+                                turnText.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        turnText.setText("引き分けです");
+                                    }
+                                });
+                            }
+                            break;
+                        }
+                        if (currentPlayer.getStoneColor() == StoneColor.BLACK) {
+                            uiHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(
+                                            MAIN_ACTIVITY,
+                                            StoneColor.BLACK + "パス",
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                }
+                            });
+                        } else {
+                            uiHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(
+                                            MAIN_ACTIVITY,
+                                            StoneColor.WHITE + "パス",
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                }
+                            });
+                        }
+
+                        toggleTurn();
+                        board.resetTextViewHint();
+                        board.boardCheckService.check(board, currentStoneColor);
+                        ArrayMap<Integer, CanPutCell> availableCells = board.boardCheckService.getAvailableCells(currentStoneColor);
+                        board.setHintCanPut(availableCells);
+
+                    }
+
+                    if (currentPlayer.getIsPutStone()) {
+                        toggleTurn();
+                        board.resetTextViewHint();
+                        board.boardCheckService.check(board, currentStoneColor);
+                        ArrayMap<Integer, CanPutCell> availableCells = board.boardCheckService.getAvailableCells(currentStoneColor);
+                        board.setHintCanPut(availableCells);
+                        updateStoneCount();
+                    }
+                }
+            }
+        }).start();
     }
 
     public void resetGame() {
@@ -49,77 +146,68 @@ public class Game {
         setFirstTurn();
         setTurnText();
         updateStoneCount();
-        boardCheckService.check(board, currentTurn);
-        board.setHintCanPut(boardCheckService.getAvailableCells(currentTurn));
+        board.boardCheckService.check(board, currentStoneColor);
+        board.setHintCanPut(board.boardCheckService.getAvailableCells(currentStoneColor));
+        gameThreadStart();
     }
 
     public void setFirstTurn() {
-        currentTurn = Turn.BLACK;
+        this.currentStoneColor = StoneColor.BLACK;
+        this.currentPlayer = playerBlack;
     }
 
-    public void putStone(Cell cell) {
-        boolean isAvailableCell = boardCheckService.isAvailableCell(cell, currentTurn);
+    public void initPlayer() {
+        Player black = new UserPlayer(EnumPlayer.USER, StoneColor.BLACK);
+//        Player black = new RandomPlayer(EnumPlayer.RANDOM, StoneColor.BLACK);
+        Player white = new RandomPlayer(EnumPlayer.RANDOM, StoneColor.WHITE);
+//        Player white = new UserPlayer(EnumPlayer.USER, StoneColor.WHITE);
 
-        if (cell.isEmpty() && isAvailableCell) {
-            ArrayList<Cell> reversibleCells = boardCheckService.getReversibleCells(cell, currentTurn);
-            board.putStone(cell, currentTurn);
-            board.reverseStone(reversibleCells, currentTurn);
+        this.playerBlack = black;
+        this.playerWhite = white;
+    }
 
-            updateStoneCount();
+    public void onClickCell(Cell cell) {
+        if (currentPlayer.isUser()) {
+            BoardCheckService check = board.boardCheckService;
+            boolean isAvailableCell = check.isAvailableCell(cell, currentPlayer.getStoneColor());
 
-            toggleTurn();
-            board.resetTextViewHint();
-            boardCheckService.check(board, currentTurn);
-            ArrayMap<Integer, CanPutCell> availableCells = boardCheckService.getAvailableCells(currentTurn);
-            board.setHintCanPut(availableCells);
-
-            if (boardCheckService.isPass(currentTurn)) {
-                // トースト設定
-                Toast passToast = Toast.makeText(
-                        MAIN_ACTIVITY,
-                        currentTurn + "パス",
-                        Toast.LENGTH_SHORT
-                );
-
-                toggleTurn();
-                board.resetTextViewHint();
-                boardCheckService.check(board, currentTurn);
-                availableCells = boardCheckService.getAvailableCells(currentTurn);
-                board.setHintCanPut(availableCells);
-
-                if (boardCheckService.isGameEnd()) {
-                    if (blackStoneCount > whiteStoneCount) {
-                        turnText.setText("黒の勝ちです");
-                    } else if (blackStoneCount < whiteStoneCount) {
-                        turnText.setText("白の勝ちです");
-                    } else {
-                        turnText.setText("引き分けです");
-                    }
-                } else {
-                    passToast.show();
-                }
+            if (cell.isEmpty() && isAvailableCell) {
+                ArrayList<Cell> reversibleCells = check.getReversibleCells(cell, currentPlayer.getStoneColor());
+                currentPlayer.putStone(cell, reversibleCells, board);
             }
-        } else {
-
         }
     }
 
     private void toggleTurn() {
-        if (currentTurn == Turn.BLACK) {
-            currentTurn = Turn.WHITE;
-        } else if (currentTurn == Turn.WHITE) {
-            currentTurn = Turn.BLACK;
+        currentPlayer.toggleIsPutStone();
+
+        if (currentStoneColor == StoneColor.BLACK) {
+            currentStoneColor = StoneColor.WHITE;
+            currentPlayer = playerWhite;
+        } else if (currentStoneColor == StoneColor.WHITE) {
+            currentStoneColor = StoneColor.BLACK;
+            currentPlayer = playerBlack;
         }
         setTurnText();
     }
 
     public void updateStoneCount() {
-        blackStoneCount = board.getStoneCount(Turn.BLACK);
-        whiteStoneCount = board.getStoneCount(Turn.WHITE);
-        stoneCountText.setText("白：" + whiteStoneCount + "　　" + "黒：" + blackStoneCount);
+        blackStoneCount = board.getStoneCount(StoneColor.BLACK);
+        whiteStoneCount = board.getStoneCount(StoneColor.WHITE);
+        stoneCountText.post(new Runnable() {
+            @Override
+            public void run() {
+                stoneCountText.setText("白：" + whiteStoneCount + "　　" + "黒：" + blackStoneCount);
+            }
+        });
     }
 
     public void setTurnText() {
-        turnText.setText(currentTurn + "の番です");
+        turnText.post(new Runnable() {
+            @Override
+            public void run() {
+                turnText.setText(currentStoneColor + "の番です");
+            }
+        });
     }
 }

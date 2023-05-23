@@ -1,21 +1,21 @@
 package com.example.othello.game.board;
 import com.example.othello.constants.Constants;
 import com.example.othello.constants.Direction;
-import com.example.othello.constants.Turn;
+import com.example.othello.constants.StoneColor;
 
 import java.util.ArrayList;
 
 public class DirectionCheck {
     private final Direction direction;
     private final Cell currentCell;
-    private final Turn currentTurn;
+    private final StoneColor currentStoneColor;
 
     private ArrayList<Cell> reversibleCells = new ArrayList<>();
 
-    public DirectionCheck(Cell currentCell, Direction direction, Turn currentTurn) {
+    public DirectionCheck(Cell currentCell, Direction direction, StoneColor currentStoneColor) {
         this.currentCell = currentCell;
         this.direction = direction;
-        this.currentTurn = currentTurn;
+        this.currentStoneColor = currentStoneColor;
     }
 
     // 縦横斜めいずれかの方向に石を置けるかをループしながら調べる
@@ -32,7 +32,7 @@ public class DirectionCheck {
             }
 
             // nextCellが自分と同じ色の石かを調べる
-            if (nextCell.isSameState(currentTurn)) {
+            if (nextCell.isSameState(currentStoneColor)) {
                 isReversible = reversibleCells.size() > 0;
                 break;
             }

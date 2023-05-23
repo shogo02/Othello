@@ -9,7 +9,7 @@ import android.widget.TableRow;
 
 import com.example.othello.constants.Constants;
 import com.example.othello.constants.Direction;
-import com.example.othello.constants.Turn;
+import com.example.othello.constants.StoneColor;
 import com.example.othello.game.Game;
 
 import java.util.ArrayList;
@@ -19,8 +19,10 @@ public class Board {
 
     private HashMap<Integer, Cell> boardMap = new HashMap<Integer, Cell>();
 
-    public Board() {
+    public BoardCheckService boardCheckService;
 
+    public Board(BoardCheckService boardCheckService) {
+        this.boardCheckService = boardCheckService;
     }
 
     public void boardInit(Game game, TableLayout tableLayout, Context context) {
@@ -65,17 +67,17 @@ public class Board {
         }
     }
 
-    public void putStone(Cell cell, Turn turn) {
-        if (turn == Turn.BLACK) {
+    public void putStone(Cell cell, StoneColor stoneColor) {
+        if (stoneColor == StoneColor.BLACK) {
             cell.setBlack();
-        } else if (turn == Turn.WHITE) {
+        } else if (stoneColor == StoneColor.WHITE) {
             cell.setWhite();
         }
     }
 
-    public void reverseStone(ArrayList<Cell> cells, Turn turn) {
+    public void reverseStone(ArrayList<Cell> cells, StoneColor stoneColor) {
         for (Cell cell : cells) {
-            putStone(cell, turn);
+            putStone(cell, stoneColor);
         }
     }
 
@@ -104,15 +106,15 @@ public class Board {
         return boardMap.values();
     }
 
-    public int getStoneCount(Turn turn) {
+    public int getStoneCount(StoneColor stoneColor) {
         int blackCount = 0;
         int whiteCount = 0;
         for (Cell cell : boardMap.values()) {
             if (cell.isStateBlack()) blackCount++;
             if (cell.isStateWhite()) whiteCount++;
         }
-        if (turn == Turn.BLACK) return blackCount;
-        if (turn == Turn.WHITE) return whiteCount;
+        if (stoneColor == StoneColor.BLACK) return blackCount;
+        if (stoneColor == StoneColor.WHITE) return whiteCount;
         throw new Error("not found player");
     }
 

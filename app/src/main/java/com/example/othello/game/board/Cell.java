@@ -8,19 +8,19 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.example.othello.constants.Constants;
-import com.example.othello.constants.Turn;
+import com.example.othello.constants.StoneColor;
 import com.example.othello.game.Game;
 
 public class Cell {
     private Integer cellId;
-    private Turn state;
+    private StoneColor state;
     private TextView textView;
 
     public Cell() {
 
     }
 
-    public Cell(Integer cellId, Turn state) {
+    public Cell(Integer cellId, StoneColor state) {
         this.cellId = cellId;
         this.state = state;
     }
@@ -51,17 +51,17 @@ public class Cell {
             public void onClick(View view) {
                 TextView textView = (TextView) view;
                 Cell cell = board.getCell(textView.getId());
-                game.putStone(cell);
+                game.onClickCell(cell);
             }
         };
     }
 
     public boolean isStateBlack() {
-        return state == Turn.BLACK;
+        return state == StoneColor.BLACK;
     }
 
     public boolean isStateWhite() {
-        return state == Turn.WHITE;
+        return state == StoneColor.WHITE;
     }
 
     public boolean isEmpty() {
@@ -69,19 +69,19 @@ public class Cell {
     }
 
 
-    public boolean isSameState(Turn state) {
+    public boolean isSameState(StoneColor state) {
         return this.state == state;
     }
 
-    public Turn getEnemyState() {
-        return isStateBlack() ? Turn.WHITE : Turn.BLACK;
+    public StoneColor getEnemyState() {
+        return isStateBlack() ? StoneColor.WHITE : StoneColor.BLACK;
     }
 
     public Integer getId() {
         return cellId;
     }
 
-    public Turn getState() {
+    public StoneColor getState() {
         return state;
     }
 
@@ -90,25 +90,55 @@ public class Cell {
     }
 
     public void setBlack() {
-        state = Turn.BLACK;
-        textView.setText("●");
+        state = StoneColor.BLACK;
+//        MAIN_ACTIVITY.updateTextView(textView, "●");
+        textView.post(new Runnable() {
+            @Override
+            public void run() {
+                textView.setText("●");
+            }
+        });
     }
 
     public void setWhite() {
-        state = Turn.WHITE;
-        textView.setText("○");
+        state = StoneColor.WHITE;
+//        MAIN_ACTIVITY.updateTextView(textView, "○");
+        textView.post(new Runnable() {
+            @Override
+            public void run() {
+                textView.setText("○");
+            }
+        });
     }
 
     public void setEmpty() {
         state = null;
-        textView.setText("");
+//        MAIN_ACTIVITY.updateTextView(textView, "");
+        textView.post(new Runnable() {
+            @Override
+            public void run() {
+                textView.setText("");
+            }
+        });
     }
 
     public void setHintCellId() {
-        textView.setHint(String.valueOf(cellId));
+//        MAIN_ACTIVITY.updateTextView(textView, String.valueOf(cellId));
+        textView.post(new Runnable() {
+            @Override
+            public void run() {
+                textView.setHint(String.valueOf(cellId));
+            }
+        });
     }
 
     public void setHintCanPut() {
-        textView.setHint("・");
+//        MAIN_ACTIVITY.updateTextView(textView, "・");
+        textView.post(new Runnable() {
+            @Override
+            public void run() {
+                textView.setHint("・");
+            }
+        });
     }
 }

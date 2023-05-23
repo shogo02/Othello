@@ -12,7 +12,7 @@ import com.example.othello.game.board.Board;
 import com.example.othello.game.board.BoardCheckService;
 import com.example.othello.game.board.Cell;
 import com.example.othello.game.Game;
-import com.example.othello.constants.Turn;
+import com.example.othello.constants.StoneColor;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,7 +27,7 @@ public class UnitTestSample {
     Board board;
     BoardCheckService boardCheckService;
 
-    Turn turn = Turn.BLACK;
+    StoneColor stoneColor = StoneColor.BLACK;
 
     Context mockContext;
 
@@ -35,44 +35,44 @@ public class UnitTestSample {
     public void setUp() {
         mockContext = ApplicationProvider.getApplicationContext();
 
-        board = new Board();
         boardCheckService = new BoardCheckService();
-        game = new Game(new TextView(mockContext), new TextView(mockContext), board, boardCheckService);
+        board = new Board(boardCheckService);
+        game = new Game(new TextView(mockContext), new TextView(mockContext), board);
         board.boardInit(game, new TableLayout(mockContext), mockContext);
     }
 
     @Test
     public void testCheckDirection() {
         // 42に黒の石を置くとし、全方向に白の石を置く
-        board.putStone(board.getCell(33), Turn.WHITE);
-        board.putStone(board.getCell(34), Turn.WHITE);
-        board.putStone(board.getCell(35), Turn.WHITE);
-        board.putStone(board.getCell(41), Turn.WHITE);
-        board.putStone(board.getCell(43), Turn.WHITE);
-        board.putStone(board.getCell(49), Turn.WHITE);
-        board.putStone(board.getCell(50), Turn.WHITE);
-        board.putStone(board.getCell(51), Turn.WHITE);
+        board.putStone(board.getCell(33), StoneColor.WHITE);
+        board.putStone(board.getCell(34), StoneColor.WHITE);
+        board.putStone(board.getCell(35), StoneColor.WHITE);
+        board.putStone(board.getCell(41), StoneColor.WHITE);
+        board.putStone(board.getCell(43), StoneColor.WHITE);
+        board.putStone(board.getCell(49), StoneColor.WHITE);
+        board.putStone(board.getCell(50), StoneColor.WHITE);
+        board.putStone(board.getCell(51), StoneColor.WHITE);
 
         // 更にその周囲を黒の石で囲む
-        board.putStone(board.getCell(24), Turn.BLACK);
-        board.putStone(board.getCell(25), Turn.BLACK);
-        board.putStone(board.getCell(26), Turn.BLACK);
-        board.putStone(board.getCell(27), Turn.BLACK);
-        board.putStone(board.getCell(28), Turn.BLACK);
-        board.putStone(board.getCell(32), Turn.BLACK);
-        board.putStone(board.getCell(36), Turn.BLACK);
-        board.putStone(board.getCell(40), Turn.BLACK);
-        board.putStone(board.getCell(44), Turn.BLACK);
-        board.putStone(board.getCell(48), Turn.BLACK);
-        board.putStone(board.getCell(52), Turn.BLACK);
-        board.putStone(board.getCell(56), Turn.BLACK);
-        board.putStone(board.getCell(57), Turn.BLACK);
-        board.putStone(board.getCell(58), Turn.BLACK);
-        board.putStone(board.getCell(59), Turn.BLACK);
-        board.putStone(board.getCell(60), Turn.BLACK);
+        board.putStone(board.getCell(24), StoneColor.BLACK);
+        board.putStone(board.getCell(25), StoneColor.BLACK);
+        board.putStone(board.getCell(26), StoneColor.BLACK);
+        board.putStone(board.getCell(27), StoneColor.BLACK);
+        board.putStone(board.getCell(28), StoneColor.BLACK);
+        board.putStone(board.getCell(32), StoneColor.BLACK);
+        board.putStone(board.getCell(36), StoneColor.BLACK);
+        board.putStone(board.getCell(40), StoneColor.BLACK);
+        board.putStone(board.getCell(44), StoneColor.BLACK);
+        board.putStone(board.getCell(48), StoneColor.BLACK);
+        board.putStone(board.getCell(52), StoneColor.BLACK);
+        board.putStone(board.getCell(56), StoneColor.BLACK);
+        board.putStone(board.getCell(57), StoneColor.BLACK);
+        board.putStone(board.getCell(58), StoneColor.BLACK);
+        board.putStone(board.getCell(59), StoneColor.BLACK);
+        board.putStone(board.getCell(60), StoneColor.BLACK);
 
-        boardCheckService.check(board, turn);
-        ArrayList<Cell> reversibleCells =  boardCheckService.getReversibleCells(board.getCell(42), turn);
+        boardCheckService.check(board, stoneColor);
+        ArrayList<Cell> reversibleCells =  boardCheckService.getReversibleCells(board.getCell(42), stoneColor);
         Assert.assertEquals(reversibleCells.size(), 8);
         for(Cell cell : reversibleCells) {
             if (
