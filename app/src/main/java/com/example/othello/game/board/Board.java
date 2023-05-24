@@ -2,14 +2,11 @@ package com.example.othello.game.board;
 
 import static com.example.othello.constants.Constants.*;
 
-import android.content.Context;
 import android.util.ArrayMap;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 
-import com.example.othello.constants.Constants;
+import com.example.othello.viewController.BoardViewController;
 import com.example.othello.constants.Direction;
-import com.example.othello.constants.Turn;
+import com.example.othello.constants.StoneColor;
 import com.example.othello.game.Game;
 
 import java.util.ArrayList;
@@ -19,36 +16,26 @@ public class Board {
 
     private HashMap<Integer, Cell> boardMap = new HashMap<Integer, Cell>();
 
-    public Board() {
+    public BoardCheckService boardCheckService;
 
+    public BoardViewController boardViewController;
+
+    public Board(BoardCheckService boardCheckService, BoardViewController boardViewController) {
+        this.boardCheckService = boardCheckService;
+        this.boardViewController = boardViewController;
     }
 
-    public void boardInit(Game game, TableLayout tableLayout, Context context) {
-        // paddingを設定
-        tableLayout.setPadding(Constants.BOARD_LINE, Constants.BOARD_LINE, Constants.BOARD_LINE, Constants.BOARD_LINE);
-        tableLayout.setBackgroundColor(Constants.BOARD_LINE_COLOR);
+    public void init(Game game) {
+        boardViewController.createBoard();
+        boardViewController.setCellOnClickListner(game, this);
+        setCell();
+    }
 
-        int cellId = 0;
-        // TableRowとTextViewを作成してTableLayoutに追加する
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            TableRow tableRow = new TableRow(context);
-            tableRow.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT, 1.0f));
-            for (int j = 0; j < BOARD_SIZE; j++) {
-                TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                layoutParams.setMargins(Constants.BOARD_LINE, Constants.BOARD_LINE, Constants.BOARD_LINE, Constants.BOARD_LINE);
-
-                Cell cell = new Cell();
-                cell.createCell(game, this, cellId, layoutParams, context);
-                setFirstStone(cell);
-
-                boardMap.put(cellId, cell);
-
-                tableRow.addView(cell.getTextView());
-
-                cellId++;
-            }
-
-            tableLayout.addView(tableRow);
+    private void setCell() {
+        for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++) {
+            Cell cell = new Cell(i, boardViewController);
+            boardMap.put(i, cell);
+            setFirstStone(cell);
         }
     }
 
@@ -65,17 +52,17 @@ public class Board {
         }
     }
 
-    public void putStone(Cell cell, Turn turn) {
-        if (turn == Turn.BLACK) {
+    public void putStone(Cell cell, StoneColor stoneColor) {
+        if (stoneColor == StoneColor.BLACK) {
             cell.setBlack();
-        } else if (turn == Turn.WHITE) {
+        } else if (stoneColor == StoneColor.WHITE) {
             cell.setWhite();
         }
     }
 
-    public void reverseStone(ArrayList<Cell> cells, Turn turn) {
+    public void reverseStone(ArrayList<Cell> cells, StoneColor stoneColor) {
         for (Cell cell : cells) {
-            putStone(cell, turn);
+            putStone(cell, stoneColor);
         }
     }
 
@@ -104,15 +91,15 @@ public class Board {
         return boardMap.values();
     }
 
-    public int getStoneCount(Turn turn) {
+    public int getStoneCount(StoneColor stoneColor) {
         int blackCount = 0;
         int whiteCount = 0;
         for (Cell cell : boardMap.values()) {
             if (cell.isStateBlack()) blackCount++;
             if (cell.isStateWhite()) whiteCount++;
         }
-        if (turn == Turn.BLACK) return blackCount;
-        if (turn == Turn.WHITE) return whiteCount;
+        if (stoneColor == StoneColor.BLACK) return blackCount;
+        if (stoneColor == StoneColor.WHITE) return whiteCount;
         throw new Error("not found player");
     }
 

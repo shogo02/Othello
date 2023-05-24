@@ -3,7 +3,7 @@ package com.example.othello.game.board;
 import android.util.ArrayMap;
 
 import com.example.othello.constants.Direction;
-import com.example.othello.constants.Turn;
+import com.example.othello.constants.StoneColor;
 
 import java.util.ArrayList;
 
@@ -16,8 +16,8 @@ public class BoardCheckService {
     private ArrayMap<Integer, CanPutCell> whiteAvailableCells = new ArrayMap<>();
 
 
-    public void check(Board board, Turn currentTurn) {
-        clearAvairableCells(currentTurn);
+    public void check(Board board, StoneColor currentStoneColor) {
+        clearAvairableCells(currentStoneColor);
         for (Cell cell : board.getBoardMapValues()) {
             if (!cell.isEmpty()) {
                 continue;
@@ -28,7 +28,7 @@ public class BoardCheckService {
 
             // 8方向を探索
             for (Direction direction : Direction.values()) {
-                DirectionCheck directionCheck = new DirectionCheck(cell, direction, currentTurn);
+                DirectionCheck directionCheck = new DirectionCheck(cell, direction, currentStoneColor);
                 directionCheck.execute(board);
                 if(directionCheck.isReversible()) {
                     reversibleCells.put(direction, directionCheck.getReversibleCells());
@@ -39,45 +39,50 @@ public class BoardCheckService {
                 CanPutCell canPutCell = new CanPutCell(cell, reversibleCells);
 
                 // 探索結果を格納
-                setAvailableCells(cell, canPutCell, currentTurn);
+                setAvailableCells(cell, canPutCell, currentStoneColor);
             }
         }
     }
 
-    private void clearAvairableCells(Turn turn) {
-        if (turn.equals(Turn.BLACK)) {
+    public void bothPlayerCheck(Board board) {
+        check(board, StoneColor.BLACK);
+        check(board, StoneColor.WHITE);
+    }
+
+    private void clearAvairableCells(StoneColor stoneColor) {
+        if (stoneColor.equals(StoneColor.BLACK)) {
             blackAvailableCells = new ArrayMap<>();
         } else {
             whiteAvailableCells = new ArrayMap<>();
         }
     }
 
-    private void setAvailableCells(Cell cell, CanPutCell canPutCells, Turn currentTurn) {
-        if (currentTurn.equals(Turn.BLACK)) {
+    private void setAvailableCells(Cell cell, CanPutCell canPutCells, StoneColor currentStoneColor) {
+        if (currentStoneColor.equals(StoneColor.BLACK)) {
             blackAvailableCells.put(cell.getId(), canPutCells);
         } else {
             whiteAvailableCells.put(cell.getId(), canPutCells);
         }
     }
 
-    public ArrayList<Cell> getReversibleCells(Cell cell, Turn currentTurn) {
-        if (currentTurn.equals(Turn.BLACK)) {
+    public ArrayList<Cell> getReversibleCells(Cell cell, StoneColor currentStoneColor) {
+        if (currentStoneColor.equals(StoneColor.BLACK)) {
             return blackAvailableCells.get(cell.getId()).getReversibleCells();
         } else {
             return whiteAvailableCells.get(cell.getId()).getReversibleCells();
         }
     }
 
-    public ArrayMap<Integer, CanPutCell> getAvailableCells(Turn currentTurn) {
-        if (currentTurn.equals(Turn.BLACK)) {
+    public ArrayMap<Integer, CanPutCell> getAvailableCells(StoneColor currentStoneColor) {
+        if (currentStoneColor.equals(StoneColor.BLACK)) {
             return blackAvailableCells;
         } else {
             return whiteAvailableCells;
         }
     }
 
-    public boolean isAvailableCell(Cell cell, Turn currentTurn) {
-        ArrayMap<Integer, CanPutCell> availableCells = getAvailableCells(currentTurn);
+    public boolean isAvailableCell(Cell cell, StoneColor currentStoneColor) {
+        ArrayMap<Integer, CanPutCell> availableCells = getAvailableCells(currentStoneColor);
         for (CanPutCell availableCell : availableCells.values()) {
             if (availableCell.cell.getId() == cell.getId()) {
                 return true;
@@ -86,8 +91,8 @@ public class BoardCheckService {
         return false;
     }
 
-    public boolean isPass(Turn turn) {
-        if (turn.equals(Turn.BLACK)) {
+    public boolean isPass(StoneColor stoneColor) {
+        if (stoneColor.equals(StoneColor.BLACK)) {
             return blackAvailableCells.size() == 0;
         } else {
             return whiteAvailableCells.size() == 0;
