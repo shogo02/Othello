@@ -10,18 +10,13 @@ import android.os.Bundle;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.widget.Button;
-import android.widget.TableLayout;
-import android.widget.TextView;
 
-import com.example.othello.game.board.Board;
-import com.example.othello.game.board.BoardCheckService;
 import com.example.othello.game.Game;
 
 public class MainActivity extends AppCompatActivity {
-    public static MainActivity MAIN_ACTIVITY;
+    private static MainActivity MAIN_ACTIVITY = null;
 
-    public static Handler uiHandler;
+    private static Handler uiHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,25 +24,31 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         MAIN_ACTIVITY = this;
 
+        // UIスレッドのハンドラを設定
         uiHandler = new Handler(Looper.getMainLooper());
 
         // ダークモードを無効化
         AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO);
 
-        TextView turnText = findViewById(R.id.turnText);
-        TableLayout tableLayout = findViewById(R.id.board);
-        Button resetBtn = findViewById(R.id.resetBtn);
-        TextView stoneCountText = findViewById(R.id.stoneCountText);
+        // ゲームビューの初期化
+        GameViewController gameViewController = new GameViewController();
+        gameViewController.init();
 
-        BoardCheckService boardCheckService = new BoardCheckService();
-        Board board = new Board(boardCheckService);
-        Game game = new Game(turnText, stoneCountText, board);
+        // ボードビューの初期化
+        BoardViewController boardViewController = new BoardViewController();
+        boardViewController.init();
 
-        board.boardInit(game, tableLayout, MAIN_ACTIVITY);
-        resetBtn.setOnClickListener(view -> {
-            game.resetGame();
-        });
-
+        // ゲームの初期化
+        Game game = new Game(gameViewController, boardViewController);
+        game.init();
         game.startGame();
+    }
+
+    public static MainActivity getMainActivity() {
+        return MAIN_ACTIVITY;
+    }
+
+    public static Handler getUiHandler() {
+        return uiHandler;
     }
 }

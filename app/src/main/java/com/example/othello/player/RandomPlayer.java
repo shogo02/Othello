@@ -11,7 +11,7 @@ import com.example.othello.game.board.CanPutCell;
 public class RandomPlayer extends Player{
 
 
-    RandomPlayer(EnumPlayer playerType, StoneColor stoneColor) {
+    public RandomPlayer(EnumPlayer playerType, StoneColor stoneColor) {
         super(playerType, stoneColor);
     }
 

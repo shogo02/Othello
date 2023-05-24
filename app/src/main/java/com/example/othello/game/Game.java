@@ -1,13 +1,12 @@
 package com.example.othello.game;
 
-
-import static com.example.othello.MainActivity.MAIN_ACTIVITY;
-import static com.example.othello.MainActivity.uiHandler;
-
+import android.os.Handler;
 import android.util.ArrayMap;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.othello.BoardViewController;
+import com.example.othello.MainActivity;
+import com.example.othello.GameViewController;
 import com.example.othello.constants.EnumPlayer;
 import com.example.othello.constants.StoneColor;
 import com.example.othello.game.board.Board;
@@ -24,10 +23,9 @@ public class Game {
     /* DI */
     private Board board;
 
-    /* View */
-    public TextView turnText;
+    private GameViewController gameViewController;
 
-    public TextView stoneCountText;
+    private BoardViewController boardViewController;
 
     /* Game */
     public StoneColor currentStoneColor;
@@ -43,10 +41,18 @@ public class Game {
     public Player playerWhite;
 
 
-    public Game(TextView turnText, TextView stoneCountText, Board board) {
-        this.turnText = turnText;
-        this.stoneCountText = stoneCountText;
-        this.board = board;
+    public Game(GameViewController gameViewController, BoardViewController boardViewController) {
+        this.gameViewController = gameViewController;
+        this.boardViewController = boardViewController;
+    }
+
+    public void init() {
+        BoardCheckService boardCheckService = new BoardCheckService();
+
+        board = new Board(boardCheckService, boardViewController);
+        board.init(this);
+
+        gameViewController.setOnClickListner(this);
     }
 
     public void startGame() {
@@ -59,11 +65,12 @@ public class Game {
         gameThreadStart();
     }
 
-    public void gameThreadStart() {
+    private void gameThreadStart() {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 PlayerHandler playerHandler = new PlayerHandler(board);
+                Handler uiHandler = MainActivity.getUiHandler();
 
                 while (true) {
                     if (!board.boardCheckService.isPass(currentStoneColor)) {
@@ -73,26 +80,11 @@ public class Game {
 
                         if (board.boardCheckService.isGameEnd()) {
                             if (blackStoneCount > whiteStoneCount) {
-                                turnText.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        turnText.setText("黒の勝ちです");
-                                    }
-                                });
+                                gameViewController.setTurnText("黒の勝ちです");
                             } else if (blackStoneCount < whiteStoneCount) {
-                                turnText.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        turnText.setText("白の勝ちです");
-                                    }
-                                });
+                                gameViewController.setTurnText("白の勝ちです");
                             } else {
-                                turnText.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        turnText.setText("引き分けです");
-                                    }
-                                });
+                                gameViewController.setTurnText("引き分けです");
                             }
                             break;
                         }
@@ -101,7 +93,7 @@ public class Game {
                                 @Override
                                 public void run() {
                                     Toast.makeText(
-                                            MAIN_ACTIVITY,
+                                            MainActivity.getMainActivity(),
                                             StoneColor.BLACK + "パス",
                                             Toast.LENGTH_SHORT
                                     ).show();
@@ -112,7 +104,7 @@ public class Game {
                                 @Override
                                 public void run() {
                                     Toast.makeText(
-                                            MAIN_ACTIVITY,
+                                            MainActivity.getMainActivity(),
                                             StoneColor.WHITE + "パス",
                                             Toast.LENGTH_SHORT
                                     ).show();
@@ -151,12 +143,12 @@ public class Game {
         gameThreadStart();
     }
 
-    public void setFirstTurn() {
+    private void setFirstTurn() {
         this.currentStoneColor = StoneColor.BLACK;
         this.currentPlayer = playerBlack;
     }
 
-    public void initPlayer() {
+    private void initPlayer() {
         Player black = new UserPlayer(EnumPlayer.USER, StoneColor.BLACK);
 //        Player black = new RandomPlayer(EnumPlayer.RANDOM, StoneColor.BLACK);
         Player white = new RandomPlayer(EnumPlayer.RANDOM, StoneColor.WHITE);
@@ -191,23 +183,17 @@ public class Game {
         setTurnText();
     }
 
-    public void updateStoneCount() {
+    private void updateStoneCount() {
         blackStoneCount = board.getStoneCount(StoneColor.BLACK);
         whiteStoneCount = board.getStoneCount(StoneColor.WHITE);
-        stoneCountText.post(new Runnable() {
-            @Override
-            public void run() {
-                stoneCountText.setText("白：" + whiteStoneCount + "　　" + "黒：" + blackStoneCount);
-            }
-        });
+        gameViewController.setStoneCountText("白：" + whiteStoneCount + "　　" + "黒：" + blackStoneCount);
     }
 
-    public void setTurnText() {
-        turnText.post(new Runnable() {
-            @Override
-            public void run() {
-                turnText.setText(currentStoneColor + "の番です");
-            }
-        });
+    private void setTurnText() {
+        gameViewController.setTurnText(currentStoneColor + "の番です");
+    }
+
+    public Board getBoard() {
+        return board;
     }
 }

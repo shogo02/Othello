@@ -2,12 +2,9 @@ package com.example.othello.game.board;
 
 import static com.example.othello.constants.Constants.*;
 
-import android.content.Context;
 import android.util.ArrayMap;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 
-import com.example.othello.constants.Constants;
+import com.example.othello.BoardViewController;
 import com.example.othello.constants.Direction;
 import com.example.othello.constants.StoneColor;
 import com.example.othello.game.Game;
@@ -21,36 +18,24 @@ public class Board {
 
     public BoardCheckService boardCheckService;
 
-    public Board(BoardCheckService boardCheckService) {
+    public BoardViewController boardViewController;
+
+    public Board(BoardCheckService boardCheckService, BoardViewController boardViewController) {
         this.boardCheckService = boardCheckService;
+        this.boardViewController = boardViewController;
     }
 
-    public void boardInit(Game game, TableLayout tableLayout, Context context) {
-        // paddingを設定
-        tableLayout.setPadding(Constants.BOARD_LINE, Constants.BOARD_LINE, Constants.BOARD_LINE, Constants.BOARD_LINE);
-        tableLayout.setBackgroundColor(Constants.BOARD_LINE_COLOR);
+    public void init(Game game) {
+        boardViewController.createBoard();
+        boardViewController.setCellOnClickListner(game);
+        setCell();
+    }
 
-        int cellId = 0;
-        // TableRowとTextViewを作成してTableLayoutに追加する
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            TableRow tableRow = new TableRow(context);
-            tableRow.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT, 1.0f));
-            for (int j = 0; j < BOARD_SIZE; j++) {
-                TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                layoutParams.setMargins(Constants.BOARD_LINE, Constants.BOARD_LINE, Constants.BOARD_LINE, Constants.BOARD_LINE);
-
-                Cell cell = new Cell();
-                cell.createCell(game, this, cellId, layoutParams, context);
-                setFirstStone(cell);
-
-                boardMap.put(cellId, cell);
-
-                tableRow.addView(cell.getTextView());
-
-                cellId++;
-            }
-
-            tableLayout.addView(tableRow);
+    private void setCell() {
+        for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++) {
+            Cell cell = new Cell(i, boardViewController);
+            boardMap.put(i, cell);
+            setFirstStone(cell);
         }
     }
 

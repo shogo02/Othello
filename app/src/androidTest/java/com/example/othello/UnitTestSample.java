@@ -2,10 +2,7 @@ package com.example.othello;
 
 
 import android.content.Context;
-import android.widget.TableLayout;
-import android.widget.TextView;
 
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 
 import com.example.othello.game.board.Board;
@@ -27,18 +24,21 @@ public class UnitTestSample {
     Board board;
     BoardCheckService boardCheckService;
 
+    GameViewController gameViewController;
+
     StoneColor stoneColor = StoneColor.BLACK;
 
     Context mockContext;
 
     @Before
     public void setUp() {
-        mockContext = ApplicationProvider.getApplicationContext();
-
-        boardCheckService = new BoardCheckService();
-        board = new Board(boardCheckService);
-        game = new Game(new TextView(mockContext), new TextView(mockContext), board);
-        board.boardInit(game, new TableLayout(mockContext), mockContext);
+//        mockContext = ApplicationProvider.getApplicationContext();
+//
+//        boardCheckService = new BoardCheckService();
+//
+//        board = new Board(boardCheckService);
+//        game = new Game(new ViewController()); // TODO 後で直す
+//        board.init(viewController);
     }
 
     @Test
