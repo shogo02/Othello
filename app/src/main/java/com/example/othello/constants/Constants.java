@@ -12,6 +12,6 @@ public class Constants {
 
     public static final int BOARD_LINE_COLOR = Color.BLACK;
 
-    public static final int BOARD_BACKGROUND = Color.GREEN;
+    public static final int BOARD_BACKGROUND = Color.parseColor("#02BF73");;
 }
 

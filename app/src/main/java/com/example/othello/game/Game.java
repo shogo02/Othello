@@ -4,9 +4,9 @@ import android.os.Handler;
 import android.util.ArrayMap;
 import android.widget.Toast;
 
-import com.example.othello.BoardViewController;
+import com.example.othello.viewController.BoardViewController;
 import com.example.othello.MainActivity;
-import com.example.othello.GameViewController;
+import com.example.othello.viewController.GameViewController;
 import com.example.othello.constants.EnumPlayer;
 import com.example.othello.constants.StoneColor;
 import com.example.othello.game.board.Board;
@@ -80,11 +80,11 @@ public class Game {
 
                         if (board.boardCheckService.isGameEnd()) {
                             if (blackStoneCount > whiteStoneCount) {
-                                gameViewController.setTurnText("黒の勝ちです");
+                                gameViewController.setTurnText("Black Win");
                             } else if (blackStoneCount < whiteStoneCount) {
-                                gameViewController.setTurnText("白の勝ちです");
+                                gameViewController.setTurnText("White Win");
                             } else {
-                                gameViewController.setTurnText("引き分けです");
+                                gameViewController.setTurnText("Draw");
                             }
                             break;
                         }
@@ -94,7 +94,7 @@ public class Game {
                                 public void run() {
                                     Toast.makeText(
                                             MainActivity.getMainActivity(),
-                                            StoneColor.BLACK + "パス",
+                                            StoneColor.BLACK + " Pass",
                                             Toast.LENGTH_SHORT
                                     ).show();
                                 }
@@ -105,7 +105,7 @@ public class Game {
                                 public void run() {
                                     Toast.makeText(
                                             MainActivity.getMainActivity(),
-                                            StoneColor.WHITE + "パス",
+                                            StoneColor.WHITE + " Pass",
                                             Toast.LENGTH_SHORT
                                     ).show();
                                 }
@@ -154,6 +154,9 @@ public class Game {
         Player white = new RandomPlayer(EnumPlayer.RANDOM, StoneColor.WHITE);
 //        Player white = new UserPlayer(EnumPlayer.USER, StoneColor.WHITE);
 
+        gameViewController.setBlackPlayerBtnText(String.valueOf(EnumPlayer.USER));
+        gameViewController.setWhitePlayerBtnText(String.valueOf(EnumPlayer.RANDOM));
+
         this.playerBlack = black;
         this.playerWhite = white;
     }
@@ -186,14 +189,30 @@ public class Game {
     private void updateStoneCount() {
         blackStoneCount = board.getStoneCount(StoneColor.BLACK);
         whiteStoneCount = board.getStoneCount(StoneColor.WHITE);
-        gameViewController.setStoneCountText("白：" + whiteStoneCount + "　　" + "黒：" + blackStoneCount);
+        gameViewController.setStoneCountText("Black：" + blackStoneCount + "　　" + "White：" + whiteStoneCount);
     }
 
     private void setTurnText() {
-        gameViewController.setTurnText(currentStoneColor + "の番です");
+        gameViewController.setTurnText(currentStoneColor + " Turn");
     }
 
-    public Board getBoard() {
-        return board;
+    public void onClickBlackPlayerBtn() {
+        if (playerBlack.isUser()) {
+            playerBlack = new RandomPlayer(EnumPlayer.RANDOM, StoneColor.BLACK);
+            gameViewController.setBlackPlayerBtnText(String.valueOf(EnumPlayer.RANDOM));
+        } else {
+            playerBlack = new UserPlayer(EnumPlayer.USER, StoneColor.BLACK);
+            gameViewController.setBlackPlayerBtnText(String.valueOf(EnumPlayer.USER));
+        }
+    }
+
+    public void onClickWhitePlayerBtn() {
+        if (playerWhite.isUser()) {
+            playerWhite = new RandomPlayer(EnumPlayer.RANDOM, StoneColor.WHITE);
+            gameViewController.setWhitePlayerBtnText(String.valueOf(EnumPlayer.RANDOM));
+        } else {
+            playerWhite = new UserPlayer(EnumPlayer.USER, StoneColor.WHITE);
+            gameViewController.setWhitePlayerBtnText(String.valueOf(EnumPlayer.USER));
+        }
     }
 }

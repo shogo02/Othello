@@ -1,6 +1,6 @@
 package com.example.othello.game.board;
 
-import com.example.othello.BoardViewController;
+import com.example.othello.viewController.BoardViewController;
 import com.example.othello.constants.StoneColor;
 
 public class Cell {

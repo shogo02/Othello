@@ -5,16 +5,17 @@ import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-
 import android.os.Bundle;
 
 import android.os.Handler;
 import android.os.Looper;
 
 import com.example.othello.game.Game;
+import com.example.othello.viewController.BoardViewController;
+import com.example.othello.viewController.GameViewController;
 
 public class MainActivity extends AppCompatActivity {
-    private static MainActivity MAIN_ACTIVITY = null;
+    private static MainActivity MAIN_ACTIVITY;
 
     private static Handler uiHandler;
 
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         // ゲームの初期化
         Game game = new Game(gameViewController, boardViewController);
         game.init();
+
+        // ゲームスタート
         game.startGame();
     }
 

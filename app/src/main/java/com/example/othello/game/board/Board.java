@@ -4,7 +4,7 @@ import static com.example.othello.constants.Constants.*;
 
 import android.util.ArrayMap;
 
-import com.example.othello.BoardViewController;
+import com.example.othello.viewController.BoardViewController;
 import com.example.othello.constants.Direction;
 import com.example.othello.constants.StoneColor;
 import com.example.othello.game.Game;
@@ -27,7 +27,7 @@ public class Board {
 
     public void init(Game game) {
         boardViewController.createBoard();
-        boardViewController.setCellOnClickListner(game);
+        boardViewController.setCellOnClickListner(game, this);
         setCell();
     }
 

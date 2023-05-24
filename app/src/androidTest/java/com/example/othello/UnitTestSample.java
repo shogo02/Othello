@@ -10,6 +10,7 @@ import com.example.othello.game.board.BoardCheckService;
 import com.example.othello.game.board.Cell;
 import com.example.othello.game.Game;
 import com.example.othello.constants.StoneColor;
+import com.example.othello.viewController.GameViewController;
 
 import org.junit.Assert;
 import org.junit.Before;
