@@ -1,6 +1,6 @@
 package com.example.othello.constants;
 
-public enum Turn {
+public enum StoneColor {
     BLACK,
     WHITE
 }
