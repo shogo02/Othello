@@ -1,7 +1,7 @@
 package com.example.othello.player;
 
 import com.example.othello.constants.EnumPlayer;
-import com.example.othello.constants.StoneColor;
+import com.example.othello.constants.EnumStoneColor;
 import com.example.othello.game.board.Board;
 import com.example.othello.game.board.Cell;
 
@@ -12,14 +12,14 @@ public abstract class Player {
     private EnumPlayer playerType;
 
     // プレイヤーの石の色
-    private StoneColor stoneColor;
+    private EnumStoneColor enumStoneColor;
 
     // 自分のターンで石を置いたかどうか
     private boolean isPutStone;
 
-    Player(EnumPlayer playerType, StoneColor stoneColor) {
+    Player(EnumPlayer playerType, EnumStoneColor enumStoneColor) {
         this.playerType = playerType;
-        this.stoneColor = stoneColor;
+        this.enumStoneColor = enumStoneColor;
     }
 
     public EnumPlayer getPlayerType() {
@@ -46,8 +46,8 @@ public abstract class Player {
         this.isPutStone = isPutStone;
     }
 
-    public StoneColor getStoneColor() {
-        return stoneColor;
+    public EnumStoneColor getStoneColor() {
+        return enumStoneColor;
     }
 
     public void putStone(Cell cell, ArrayList<Cell> reversibleCells, Board board) {

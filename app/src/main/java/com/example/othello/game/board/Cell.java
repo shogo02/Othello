@@ -1,34 +1,34 @@
 package com.example.othello.game.board;
 
-import com.example.othello.viewController.BoardViewController;
-import com.example.othello.constants.StoneColor;
+import com.example.othello.viewController.BoardViewControllerBase;
+import com.example.othello.constants.EnumStoneColor;
 
 public class Cell {
     private Integer cellId;
-    private StoneColor stoneColor;
+    private EnumStoneColor enumStoneColor;
 
-    private BoardViewController boardViewController;
+    private BoardViewControllerBase boardViewController;
 
-    public Cell(Integer cellId, BoardViewController boardViewController) {
+    public Cell(Integer cellId, BoardViewControllerBase boardViewController) {
         this.cellId = cellId;
         this.boardViewController = boardViewController;
     }
 
     public boolean isStateBlack() {
-        return stoneColor == StoneColor.BLACK;
+        return enumStoneColor == EnumStoneColor.BLACK;
     }
 
     public boolean isStateWhite() {
-        return stoneColor == StoneColor.WHITE;
+        return enumStoneColor == EnumStoneColor.WHITE;
     }
 
     public boolean isEmpty() {
-        return stoneColor == null;
+        return enumStoneColor == null;
     }
 
 
-    public boolean isSameState(StoneColor state) {
-        return this.stoneColor == state;
+    public boolean isSameState(EnumStoneColor state) {
+        return this.enumStoneColor == state;
     }
 
     public Integer getId() {
@@ -37,17 +37,17 @@ public class Cell {
 
 
     public void setBlack() {
-        stoneColor = StoneColor.BLACK;
+        enumStoneColor = EnumStoneColor.BLACK;
         boardViewController.setCellText(cellId, "●");
     }
 
     public void setWhite() {
-        stoneColor = StoneColor.WHITE;
+        enumStoneColor = EnumStoneColor.WHITE;
         boardViewController.setCellText(cellId, "○");
     }
 
     public void setEmpty() {
-        stoneColor = null;
+        enumStoneColor = null;
         boardViewController.setCellText(cellId, "");
     }
 

@@ -1,12 +1,13 @@
 package com.example.othello.game.board;
 
 import static com.example.othello.constants.Constants.*;
+import static com.example.othello.constants.EnumStoneColor.*;
 
 import android.util.ArrayMap;
 
-import com.example.othello.viewController.BoardViewController;
-import com.example.othello.constants.Direction;
-import com.example.othello.constants.StoneColor;
+import com.example.othello.viewController.BoardViewControllerBase;
+import com.example.othello.constants.EnumDirection;
+import com.example.othello.constants.EnumStoneColor;
 import com.example.othello.game.Game;
 
 import java.util.ArrayList;
@@ -18,9 +19,9 @@ public class Board {
 
     public BoardCheckService boardCheckService;
 
-    public BoardViewController boardViewController;
+    public BoardViewControllerBase boardViewController;
 
-    public Board(BoardCheckService boardCheckService, BoardViewController boardViewController) {
+    public Board(BoardCheckService boardCheckService, BoardViewControllerBase boardViewController) {
         this.boardCheckService = boardCheckService;
         this.boardViewController = boardViewController;
     }
@@ -41,9 +42,9 @@ public class Board {
 
     public void setFirstStone(Cell cell) {
         int topRight = (BOARD_SIZE / 2) * (BOARD_SIZE - 1);
-        int topLeft = topRight + Direction.LEFT.getNumber();
+        int topLeft = topRight + EnumDirection.LEFT.getNumber();
         int bottomRight = (BOARD_SIZE / 2) * (BOARD_SIZE + 1);
-        int bottomLeft = bottomRight + Direction.LEFT.getNumber();
+        int bottomLeft = bottomRight + EnumDirection.LEFT.getNumber();
 
         if (cell.getId() == topLeft || cell.getId() == bottomRight) {
             cell.setWhite();
@@ -52,17 +53,17 @@ public class Board {
         }
     }
 
-    public void putStone(Cell cell, StoneColor stoneColor) {
-        if (stoneColor == StoneColor.BLACK) {
+    public void putStone(Cell cell, EnumStoneColor enumStoneColor) {
+        if (enumStoneColor == BLACK) {
             cell.setBlack();
-        } else if (stoneColor == StoneColor.WHITE) {
+        } else if (enumStoneColor == WHITE) {
             cell.setWhite();
         }
     }
 
-    public void reverseStone(ArrayList<Cell> cells, StoneColor stoneColor) {
+    public void reverseStone(ArrayList<Cell> cells, EnumStoneColor enumStoneColor) {
         for (Cell cell : cells) {
-            putStone(cell, stoneColor);
+            putStone(cell, enumStoneColor);
         }
     }
 
@@ -91,15 +92,15 @@ public class Board {
         return boardMap.values();
     }
 
-    public int getStoneCount(StoneColor stoneColor) {
+    public int getStoneCount(EnumStoneColor enumStoneColor) {
         int blackCount = 0;
         int whiteCount = 0;
         for (Cell cell : boardMap.values()) {
             if (cell.isStateBlack()) blackCount++;
             if (cell.isStateWhite()) whiteCount++;
         }
-        if (stoneColor == StoneColor.BLACK) return blackCount;
-        if (stoneColor == StoneColor.WHITE) return whiteCount;
+        if (enumStoneColor == BLACK) return blackCount;
+        if (enumStoneColor == WHITE) return whiteCount;
         throw new Error("not found player");
     }
 

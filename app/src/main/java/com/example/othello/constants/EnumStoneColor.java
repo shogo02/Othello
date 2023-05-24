@@ -1,17 +1,15 @@
 package com.example.othello.constants;
 
-public enum EnumPlayer {
-    RANDOM("Random", "ランダム"),
-
-    USER("User", "ユーザー"),
-
-    AI("AI", "AI"),
+public enum EnumStoneColor {
+    BLACK("Black", "黒"),
+    WHITE("White", "白"),
     ;
 
     private String english;
+
     private String japanese;
 
-    EnumPlayer(String english, String japanese) {
+    EnumStoneColor(String english, String japanese) {
         this.english = english;
         this.japanese = japanese;
     }

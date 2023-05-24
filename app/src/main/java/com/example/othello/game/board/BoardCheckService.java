@@ -1,9 +1,11 @@
 package com.example.othello.game.board;
 
+import static com.example.othello.constants.EnumStoneColor.*;
+
 import android.util.ArrayMap;
 
-import com.example.othello.constants.Direction;
-import com.example.othello.constants.StoneColor;
+import com.example.othello.constants.EnumDirection;
+import com.example.othello.constants.EnumStoneColor;
 
 import java.util.ArrayList;
 
@@ -16,22 +18,22 @@ public class BoardCheckService {
     private ArrayMap<Integer, CanPutCell> whiteAvailableCells = new ArrayMap<>();
 
 
-    public void check(Board board, StoneColor currentStoneColor) {
-        clearAvairableCells(currentStoneColor);
+    public void check(Board board, EnumStoneColor currentEnumStoneColor) {
+        clearAvairableCells(currentEnumStoneColor);
         for (Cell cell : board.getBoardMapValues()) {
             if (!cell.isEmpty()) {
                 continue;
             }
 
             // 裏返せる石を格納する配列
-            ArrayMap<Direction, ArrayList<Cell>> reversibleCells = new ArrayMap<>();
+            ArrayMap<EnumDirection, ArrayList<Cell>> reversibleCells = new ArrayMap<>();
 
             // 8方向を探索
-            for (Direction direction : Direction.values()) {
-                DirectionCheck directionCheck = new DirectionCheck(cell, direction, currentStoneColor);
+            for (EnumDirection enumDirection : EnumDirection.values()) {
+                DirectionCheck directionCheck = new DirectionCheck(cell, enumDirection, currentEnumStoneColor);
                 directionCheck.execute(board);
                 if(directionCheck.isReversible()) {
-                    reversibleCells.put(direction, directionCheck.getReversibleCells());
+                    reversibleCells.put(enumDirection, directionCheck.getReversibleCells());
                 }
             }
 
@@ -39,50 +41,50 @@ public class BoardCheckService {
                 CanPutCell canPutCell = new CanPutCell(cell, reversibleCells);
 
                 // 探索結果を格納
-                setAvailableCells(cell, canPutCell, currentStoneColor);
+                setAvailableCells(cell, canPutCell, currentEnumStoneColor);
             }
         }
     }
 
     public void bothPlayerCheck(Board board) {
-        check(board, StoneColor.BLACK);
-        check(board, StoneColor.WHITE);
+        check(board, BLACK);
+        check(board, WHITE);
     }
 
-    private void clearAvairableCells(StoneColor stoneColor) {
-        if (stoneColor.equals(StoneColor.BLACK)) {
+    private void clearAvairableCells(EnumStoneColor enumStoneColor) {
+        if (enumStoneColor.equals(BLACK)) {
             blackAvailableCells = new ArrayMap<>();
         } else {
             whiteAvailableCells = new ArrayMap<>();
         }
     }
 
-    private void setAvailableCells(Cell cell, CanPutCell canPutCells, StoneColor currentStoneColor) {
-        if (currentStoneColor.equals(StoneColor.BLACK)) {
+    private void setAvailableCells(Cell cell, CanPutCell canPutCells, EnumStoneColor currentEnumStoneColor) {
+        if (currentEnumStoneColor.equals(BLACK)) {
             blackAvailableCells.put(cell.getId(), canPutCells);
         } else {
             whiteAvailableCells.put(cell.getId(), canPutCells);
         }
     }
 
-    public ArrayList<Cell> getReversibleCells(Cell cell, StoneColor currentStoneColor) {
-        if (currentStoneColor.equals(StoneColor.BLACK)) {
+    public ArrayList<Cell> getReversibleCells(Cell cell, EnumStoneColor currentEnumStoneColor) {
+        if (currentEnumStoneColor.equals(BLACK)) {
             return blackAvailableCells.get(cell.getId()).getReversibleCells();
         } else {
             return whiteAvailableCells.get(cell.getId()).getReversibleCells();
         }
     }
 
-    public ArrayMap<Integer, CanPutCell> getAvailableCells(StoneColor currentStoneColor) {
-        if (currentStoneColor.equals(StoneColor.BLACK)) {
+    public ArrayMap<Integer, CanPutCell> getAvailableCells(EnumStoneColor currentEnumStoneColor) {
+        if (currentEnumStoneColor.equals(BLACK)) {
             return blackAvailableCells;
         } else {
             return whiteAvailableCells;
         }
     }
 
-    public boolean isAvailableCell(Cell cell, StoneColor currentStoneColor) {
-        ArrayMap<Integer, CanPutCell> availableCells = getAvailableCells(currentStoneColor);
+    public boolean isAvailableCell(Cell cell, EnumStoneColor currentEnumStoneColor) {
+        ArrayMap<Integer, CanPutCell> availableCells = getAvailableCells(currentEnumStoneColor);
         for (CanPutCell availableCell : availableCells.values()) {
             if (availableCell.cell.getId() == cell.getId()) {
                 return true;
@@ -91,8 +93,8 @@ public class BoardCheckService {
         return false;
     }
 
-    public boolean isPass(StoneColor stoneColor) {
-        if (stoneColor.equals(StoneColor.BLACK)) {
+    public boolean isPass(EnumStoneColor enumStoneColor) {
+        if (enumStoneColor.equals(BLACK)) {
             return blackAvailableCells.size() == 0;
         } else {
             return whiteAvailableCells.size() == 0;

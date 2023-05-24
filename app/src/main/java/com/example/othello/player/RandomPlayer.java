@@ -3,7 +3,7 @@ package com.example.othello.player;
 import android.util.ArrayMap;
 
 import com.example.othello.constants.EnumPlayer;
-import com.example.othello.constants.StoneColor;
+import com.example.othello.constants.EnumStoneColor;
 import com.example.othello.game.board.Board;
 import com.example.othello.game.board.BoardCheckService;
 import com.example.othello.game.board.CanPutCell;
@@ -11,8 +11,8 @@ import com.example.othello.game.board.CanPutCell;
 public class RandomPlayer extends Player{
 
 
-    public RandomPlayer(EnumPlayer playerType, StoneColor stoneColor) {
-        super(playerType, stoneColor);
+    public RandomPlayer(EnumPlayer playerType, EnumStoneColor enumStoneColor) {
+        super(playerType, enumStoneColor);
     }
 
     public boolean putRandomStone(Board board) {

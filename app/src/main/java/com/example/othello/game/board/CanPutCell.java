@@ -2,15 +2,15 @@ package com.example.othello.game.board;
 
 import android.util.ArrayMap;
 
-import com.example.othello.constants.Direction;
+import com.example.othello.constants.EnumDirection;
 
 import java.util.ArrayList;
 
 public class CanPutCell {
     public Cell cell; // 置けるセルを格納
-    public ArrayMap<Direction, ArrayList<Cell>> reversibleCells; // 裏返るセルを格納
+    public ArrayMap<EnumDirection, ArrayList<Cell>> reversibleCells; // 裏返るセルを格納
 
-    public CanPutCell(Cell cell, ArrayMap<Direction, ArrayList<Cell>> reversibleCells) {
+    public CanPutCell(Cell cell, ArrayMap<EnumDirection, ArrayList<Cell>> reversibleCells) {
         this.cell = cell;
         this.reversibleCells = reversibleCells;
     }

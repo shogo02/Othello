@@ -1,6 +1,6 @@
 package com.example.othello.viewController;
 
-import static com.example.othello.constants.Constants.BOARD_SIZE;
+import static com.example.othello.constants.Constants.*;
 
 import android.graphics.Color;
 import android.view.Gravity;
@@ -8,17 +8,12 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.example.othello.MainActivity;
 import com.example.othello.R;
-import com.example.othello.constants.Constants;
 import com.example.othello.game.Game;
 import com.example.othello.game.board.Board;
 import com.example.othello.game.board.Cell;
 
-public class BoardViewController {
-
-    private final MainActivity mainActivity = MainActivity.getMainActivity();
-
+public class BoardViewControllerBase extends ViewControllerBase {
     private TableLayout board;
 
     public void init() {
@@ -26,8 +21,8 @@ public class BoardViewController {
     }
 
     public void createBoard() {
-        board.setPadding(Constants.BOARD_LINE, Constants.BOARD_LINE, Constants.BOARD_LINE, Constants.BOARD_LINE);
-        board.setBackgroundColor(Constants.BOARD_LINE_COLOR);
+        board.setPadding(BOARD_LINE, BOARD_LINE, BOARD_LINE, BOARD_LINE);
+        board.setBackgroundColor(BOARD_LINE_COLOR);
         int cellId = 0;
         // TableRowとTextViewを作成してTableLayoutに追加する
         for (int i = 0; i < BOARD_SIZE; i++) {
@@ -48,13 +43,13 @@ public class BoardViewController {
 
     public TextView createCellView(int cellId) {
         TableRow.LayoutParams params = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-        params.setMargins(Constants.BOARD_LINE, Constants.BOARD_LINE, Constants.BOARD_LINE, Constants.BOARD_LINE);
+        params.setMargins(BOARD_LINE, BOARD_LINE, BOARD_LINE, BOARD_LINE);
 
         TextView textView = new TextView(mainActivity);
         textView.setLayoutParams(params);
         textView.setTextSize(40);
         textView.setGravity(Gravity.CENTER);
-        textView.setBackgroundColor(Constants.BOARD_BACKGROUND);
+        textView.setBackgroundColor(BOARD_BACKGROUND);
         textView.setId(cellId);
         textView.setText("");
         textView.setHint(String.valueOf(cellId));
@@ -74,20 +69,10 @@ public class BoardViewController {
 
     public void setCellText(Integer cellId, String text) {
         TextView cellView = mainActivity.findViewById(cellId);
-        cellView.post(new Runnable() {
-            @Override
-            public void run() {
-                cellView.setText(text);
-            }
-        });
+        postViewSetText(cellView, text);
     }
     public void setHintText(Integer cellId, String text) {
         TextView cellView = mainActivity.findViewById(cellId);
-        cellView.post(new Runnable() {
-            @Override
-            public void run() {
-                cellView.setHint(text);
-            }
-        });
+        postViewSetHint(cellView, text);
     }
 }

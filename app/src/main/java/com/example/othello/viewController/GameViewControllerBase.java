@@ -1,17 +1,15 @@
 package com.example.othello.viewController;
 
+import static com.example.othello.constants.EnumStoneColor.BLACK;
+import static com.example.othello.constants.EnumStoneColor.WHITE;
+
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.othello.MainActivity;
 import com.example.othello.R;
 import com.example.othello.game.Game;
 
-public class GameViewController {
-
-    private final MainActivity mainActivity = MainActivity.getMainActivity();
-
+public class GameViewControllerBase extends ViewControllerBase {
     private TextView turnText;
 
     private Button resetBtn;
@@ -31,53 +29,34 @@ public class GameViewController {
         whitePlayerBtn = mainActivity.findViewById(R.id.whitePlayerBtn);
     }
 
-    public void setOnClickListner(Game game) {
+    public void setOnClickListener(Game game) {
         resetBtn.setOnClickListener(view -> {
             game.resetGame();
         });
 
         blackPlayerBtn.setOnClickListener(view -> {
-            game.onClickBlackPlayerBtn();
+            game.onClickPlayerBtn(BLACK);
         });
 
         whitePlayerBtn.setOnClickListener(view -> {
-            game.onClickWhitePlayerBtn();
+            game.onClickPlayerBtn(WHITE);
         });
     }
 
+
     public void setTurnText(String text) {
-        turnText.post(new Runnable() {
-            @Override
-            public void run() {
-                turnText.setText(text);
-            }
-        });
+        postViewSetText(turnText, text);
     }
 
     public void setStoneCountText(String text) {
-        stoneCountText.post(new Runnable() {
-            @Override
-            public void run() {
-                stoneCountText.setText(text);
-            }
-        });
+        postViewSetText(stoneCountText, text);
     }
 
     public void setBlackPlayerBtnText(String text) {
-        blackPlayerBtn.post(new Runnable() {
-            @Override
-            public void run() {
-                blackPlayerBtn.setText(text);
-            }
-        });
+        postViewSetText(blackPlayerBtn, text);
     }
 
     public void setWhitePlayerBtnText(String text) {
-        whitePlayerBtn.post(new Runnable() {
-            @Override
-            public void run() {
-                whitePlayerBtn.setText(text);
-            }
-        });
+        postViewSetText(whitePlayerBtn, text);
     }
 }

@@ -11,8 +11,8 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.example.othello.game.Game;
-import com.example.othello.viewController.BoardViewController;
-import com.example.othello.viewController.GameViewController;
+import com.example.othello.viewController.BoardViewControllerBase;
+import com.example.othello.viewController.GameViewControllerBase;
 
 public class MainActivity extends AppCompatActivity {
     private static MainActivity MAIN_ACTIVITY;
@@ -32,11 +32,11 @@ public class MainActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO);
 
         // ゲームビューの初期化
-        GameViewController gameViewController = new GameViewController();
+        GameViewControllerBase gameViewController = new GameViewControllerBase();
         gameViewController.init();
 
         // ボードビューの初期化
-        BoardViewController boardViewController = new BoardViewController();
+        BoardViewControllerBase boardViewController = new BoardViewControllerBase();
         boardViewController.init();
 
         // ゲームの初期化

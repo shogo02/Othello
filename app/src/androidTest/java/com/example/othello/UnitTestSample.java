@@ -9,8 +9,8 @@ import com.example.othello.game.board.Board;
 import com.example.othello.game.board.BoardCheckService;
 import com.example.othello.game.board.Cell;
 import com.example.othello.game.Game;
-import com.example.othello.constants.StoneColor;
-import com.example.othello.viewController.GameViewController;
+import com.example.othello.constants.EnumStoneColor;
+import com.example.othello.viewController.GameViewControllerBase;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,9 +25,9 @@ public class UnitTestSample {
     Board board;
     BoardCheckService boardCheckService;
 
-    GameViewController gameViewController;
+    GameViewControllerBase gameViewController;
 
-    StoneColor stoneColor = StoneColor.BLACK;
+    EnumStoneColor enumStoneColor = EnumStoneColor.BLACK;
 
     Context mockContext;
 
@@ -45,35 +45,35 @@ public class UnitTestSample {
     @Test
     public void testCheckDirection() {
         // 42に黒の石を置くとし、全方向に白の石を置く
-        board.putStone(board.getCell(33), StoneColor.WHITE);
-        board.putStone(board.getCell(34), StoneColor.WHITE);
-        board.putStone(board.getCell(35), StoneColor.WHITE);
-        board.putStone(board.getCell(41), StoneColor.WHITE);
-        board.putStone(board.getCell(43), StoneColor.WHITE);
-        board.putStone(board.getCell(49), StoneColor.WHITE);
-        board.putStone(board.getCell(50), StoneColor.WHITE);
-        board.putStone(board.getCell(51), StoneColor.WHITE);
+        board.putStone(board.getCell(33), EnumStoneColor.WHITE);
+        board.putStone(board.getCell(34), EnumStoneColor.WHITE);
+        board.putStone(board.getCell(35), EnumStoneColor.WHITE);
+        board.putStone(board.getCell(41), EnumStoneColor.WHITE);
+        board.putStone(board.getCell(43), EnumStoneColor.WHITE);
+        board.putStone(board.getCell(49), EnumStoneColor.WHITE);
+        board.putStone(board.getCell(50), EnumStoneColor.WHITE);
+        board.putStone(board.getCell(51), EnumStoneColor.WHITE);
 
         // 更にその周囲を黒の石で囲む
-        board.putStone(board.getCell(24), StoneColor.BLACK);
-        board.putStone(board.getCell(25), StoneColor.BLACK);
-        board.putStone(board.getCell(26), StoneColor.BLACK);
-        board.putStone(board.getCell(27), StoneColor.BLACK);
-        board.putStone(board.getCell(28), StoneColor.BLACK);
-        board.putStone(board.getCell(32), StoneColor.BLACK);
-        board.putStone(board.getCell(36), StoneColor.BLACK);
-        board.putStone(board.getCell(40), StoneColor.BLACK);
-        board.putStone(board.getCell(44), StoneColor.BLACK);
-        board.putStone(board.getCell(48), StoneColor.BLACK);
-        board.putStone(board.getCell(52), StoneColor.BLACK);
-        board.putStone(board.getCell(56), StoneColor.BLACK);
-        board.putStone(board.getCell(57), StoneColor.BLACK);
-        board.putStone(board.getCell(58), StoneColor.BLACK);
-        board.putStone(board.getCell(59), StoneColor.BLACK);
-        board.putStone(board.getCell(60), StoneColor.BLACK);
+        board.putStone(board.getCell(24), EnumStoneColor.BLACK);
+        board.putStone(board.getCell(25), EnumStoneColor.BLACK);
+        board.putStone(board.getCell(26), EnumStoneColor.BLACK);
+        board.putStone(board.getCell(27), EnumStoneColor.BLACK);
+        board.putStone(board.getCell(28), EnumStoneColor.BLACK);
+        board.putStone(board.getCell(32), EnumStoneColor.BLACK);
+        board.putStone(board.getCell(36), EnumStoneColor.BLACK);
+        board.putStone(board.getCell(40), EnumStoneColor.BLACK);
+        board.putStone(board.getCell(44), EnumStoneColor.BLACK);
+        board.putStone(board.getCell(48), EnumStoneColor.BLACK);
+        board.putStone(board.getCell(52), EnumStoneColor.BLACK);
+        board.putStone(board.getCell(56), EnumStoneColor.BLACK);
+        board.putStone(board.getCell(57), EnumStoneColor.BLACK);
+        board.putStone(board.getCell(58), EnumStoneColor.BLACK);
+        board.putStone(board.getCell(59), EnumStoneColor.BLACK);
+        board.putStone(board.getCell(60), EnumStoneColor.BLACK);
 
-        boardCheckService.check(board, stoneColor);
-        ArrayList<Cell> reversibleCells =  boardCheckService.getReversibleCells(board.getCell(42), stoneColor);
+        boardCheckService.check(board, enumStoneColor);
+        ArrayList<Cell> reversibleCells =  boardCheckService.getReversibleCells(board.getCell(42), enumStoneColor);
         Assert.assertEquals(reversibleCells.size(), 8);
         for(Cell cell : reversibleCells) {
             if (
