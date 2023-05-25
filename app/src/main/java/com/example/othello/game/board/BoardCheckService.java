@@ -19,7 +19,7 @@ public class BoardCheckService {
 
 
     public void check(Board board, EnumStoneColor currentEnumStoneColor) {
-        clearAvairableCells(currentEnumStoneColor);
+        clearAvailableCells(currentEnumStoneColor);
         for (Cell cell : board.getBoardMapValues()) {
             if (!cell.isEmpty()) {
                 continue;
@@ -51,7 +51,7 @@ public class BoardCheckService {
         check(board, WHITE);
     }
 
-    private void clearAvairableCells(EnumStoneColor enumStoneColor) {
+    private void clearAvailableCells(EnumStoneColor enumStoneColor) {
         if (enumStoneColor.equals(BLACK)) {
             blackAvailableCells = new ArrayMap<>();
         } else {

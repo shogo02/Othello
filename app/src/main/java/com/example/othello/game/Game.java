@@ -72,63 +72,29 @@ public class Game {
             @Override
             public void run() {
                 PlayerHandler playerHandler = new PlayerHandler(board);
-                Handler uiHandler = MainActivity.getUiHandler();
 
                 while (true) {
+                    Player passPlayer = null;
                     if (!board.boardCheckService.isPass(currentPlayer.getStoneColor())) {
                         playerHandler.handler(currentPlayer);
                     } else { // パス処理
-                        board.boardCheckService.bothPlayerCheck(board);
-
-                        if (board.boardCheckService.isGameEnd()) {
-                            if (blackStoneCount > whiteStoneCount) {
-                                gameViewController.setTurnText("Black Win");
-                            } else if (blackStoneCount < whiteStoneCount) {
-                                gameViewController.setTurnText("White Win");
-                            } else {
-                                gameViewController.setTurnText("Draw");
-                            }
-                            break;
-                        }
-                        if (currentPlayer.getStoneColor() == BLACK) {
-                            uiHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(
-                                            MainActivity.getMainActivity(),
-                                            BLACK + " Pass",
-                                            Toast.LENGTH_SHORT
-                                    ).show();
-                                }
-                            });
-                        } else {
-                            uiHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(
-                                            MainActivity.getMainActivity(),
-                                            WHITE + " Pass",
-                                            Toast.LENGTH_SHORT
-                                    ).show();
-                                }
-                            });
-                        }
-
-                        toggleTurn();
-                        board.resetTextViewHint();
-                        board.boardCheckService.check(board, currentPlayer.getStoneColor());
-                        ArrayMap<Integer, CanPutCell> availableCells = board.boardCheckService.getAvailableCells(currentPlayer.getStoneColor());
-                        board.setHintCanPut(availableCells);
-
+                        passPlayer = currentPlayer;
                     }
 
-                    if (currentPlayer.getIsPutStone()) {
-                        toggleTurn();
-                        board.resetTextViewHint();
-                        board.boardCheckService.check(board, currentPlayer.getStoneColor());
-                        ArrayMap<Integer, CanPutCell> availableCells = board.boardCheckService.getAvailableCells(currentPlayer.getStoneColor());
-                        board.setHintCanPut(availableCells);
-                        updateStoneCount();
+                    toggleTurn();
+                    board.resetTextViewHint();
+                    board.boardCheckService.check(board, currentPlayer.getStoneColor());
+                    ArrayMap<Integer, CanPutCell> availableCells = board.boardCheckService.getAvailableCells(currentPlayer.getStoneColor());
+                    board.setHintCanPut(availableCells);
+                    updateStoneCount();
+
+                    if (board.boardCheckService.isGameEnd()) {
+                        judgeWinner();
+                        break;
+                    }
+
+                    if (passPlayer != null) {
+                        gameViewController.postMakeToast(passPlayer.getStoneColor().getEnglish() + " Pass");
                     }
                 }
             }
@@ -151,15 +117,13 @@ public class Game {
 
     private void initPlayer() {
         Player black = new UserPlayer(USER, BLACK);
-//        Player black = new RandomPlayer(EnumPlayer.RANDOM, StoneColor.BLACK);
         Player white = new RandomPlayer(RANDOM, WHITE);
-//        Player white = new UserPlayer(EnumPlayer.USER, StoneColor.WHITE);
 
         gameViewController.setBlackPlayerBtnText(String.valueOf(USER));
         gameViewController.setWhitePlayerBtnText(String.valueOf(RANDOM));
 
-        this.playerBlack = black;
-        this.playerWhite = white;
+        playerBlack = black;
+        playerWhite = white;
     }
 
     public void onClickCell(Cell cell) {
@@ -213,6 +177,16 @@ public class Game {
                 playerWhite = new UserPlayer(USER, WHITE);
                 gameViewController.setWhitePlayerBtnText(String.valueOf(USER));
             }
+        }
+    }
+
+    public void judgeWinner() {
+        if (blackStoneCount > whiteStoneCount) {
+            gameViewController.setTurnText("Black Win");
+        } else if (blackStoneCount < whiteStoneCount) {
+            gameViewController.setTurnText("White Win");
+        } else {
+            gameViewController.setTurnText("Draw");
         }
     }
 }

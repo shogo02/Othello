@@ -1,13 +1,17 @@
 package com.example.othello.viewController;
 
+import android.os.Handler;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.othello.MainActivity;
 
 public abstract class ViewControllerBase implements ViewControllerInterface {
     protected final MainActivity mainActivity = MainActivity.getMainActivity();
+    protected final Handler uiHandler = MainActivity.getUiHandler();
 
-    public void postViewSetText(TextView view, String text) {
+
+    protected void postViewSetText(TextView view, String text) {
         view.post(new Runnable() {
             @Override
             public void run() {
@@ -16,11 +20,24 @@ public abstract class ViewControllerBase implements ViewControllerInterface {
         });
     }
 
-    public void postViewSetHint(TextView view, String hint) {
+    protected void postViewSetHint(TextView view, String hint) {
         view.post(new Runnable() {
             @Override
             public void run() {
                 view.setHint(hint);
+            }
+        });
+    }
+
+    public void postMakeToast(String text) {
+        uiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(
+                        MainActivity.getMainActivity(),
+                        text,
+                        Toast.LENGTH_SHORT
+                ).show();
             }
         });
     }
