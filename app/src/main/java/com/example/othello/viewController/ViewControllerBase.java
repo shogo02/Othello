@@ -12,33 +12,18 @@ public abstract class ViewControllerBase implements ViewControllerInterface {
 
 
     protected void postViewSetText(TextView view, String text) {
-        view.post(new Runnable() {
-            @Override
-            public void run() {
-                view.setText(text);
-            }
-        });
+        view.post(() -> view.setText(text));
     }
 
     protected void postViewSetHint(TextView view, String hint) {
-        view.post(new Runnable() {
-            @Override
-            public void run() {
-                view.setHint(hint);
-            }
-        });
+        view.post(() -> view.setHint(hint));
     }
 
     public void postMakeToast(String text) {
-        uiHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(
-                        MainActivity.getMainActivity(),
-                        text,
-                        Toast.LENGTH_SHORT
-                ).show();
-            }
-        });
+        uiHandler.post(() -> Toast.makeText(
+                MainActivity.getMainActivity(),
+                text,
+                Toast.LENGTH_SHORT
+        ).show());
     }
 }

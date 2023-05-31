@@ -5,13 +5,10 @@ import static com.example.othello.constants.EnumPlayer.USER;
 import static com.example.othello.constants.EnumStoneColor.BLACK;
 import static com.example.othello.constants.EnumStoneColor.WHITE;
 
-import android.os.Handler;
 import android.util.ArrayMap;
-import android.widget.Toast;
 
 import com.example.othello.constants.EnumStoneColor;
 import com.example.othello.viewController.BoardViewControllerBase;
-import com.example.othello.MainActivity;
 import com.example.othello.viewController.GameViewControllerBase;
 import com.example.othello.game.board.Board;
 import com.example.othello.game.board.BoardCheckService;
@@ -68,34 +65,31 @@ public class Game {
     }
 
     private void gameThreadStart() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                PlayerHandler playerHandler = new PlayerHandler(board);
+        new Thread(() -> {
+            PlayerHandler playerHandler = new PlayerHandler(board);
 
-                while (true) {
-                    Player passPlayer = null;
-                    if (!board.boardCheckService.isPass(currentPlayer.getStoneColor())) {
-                        playerHandler.handler(currentPlayer);
-                    } else { // パス処理
-                        passPlayer = currentPlayer;
-                    }
+            while (true) {
+                Player passPlayer = null;
+                if (!board.boardCheckService.isPass(currentPlayer.getStoneColor())) {
+                    playerHandler.handler(currentPlayer);
+                } else { // パス処理
+                    passPlayer = currentPlayer;
+                }
 
-                    toggleTurn();
-                    board.resetTextViewHint();
-                    board.boardCheckService.check(board, currentPlayer.getStoneColor());
-                    ArrayMap<Integer, CanPutCell> availableCells = board.boardCheckService.getAvailableCells(currentPlayer.getStoneColor());
-                    board.setHintCanPut(availableCells);
-                    updateStoneCount();
+                toggleTurn();
+                board.resetTextViewHint();
+                board.boardCheckService.check(board, currentPlayer.getStoneColor());
+                ArrayMap<Integer, CanPutCell> availableCells = board.boardCheckService.getAvailableCells(currentPlayer.getStoneColor());
+                board.setHintCanPut(availableCells);
+                updateStoneCount();
 
-                    if (board.boardCheckService.isGameEnd()) {
-                        judgeWinner();
-                        break;
-                    }
+                if (board.boardCheckService.isGameEnd()) {
+                    judgeWinner();
+                    break;
+                }
 
-                    if (passPlayer != null) {
-                        gameViewController.postMakeToast(passPlayer.getStoneColor().getEnglish() + " Pass");
-                    }
+                if (passPlayer != null) {
+                    gameViewController.postMakeToast(passPlayer.getStoneColor().getEnglish() + " Pass");
                 }
             }
         }).start();
